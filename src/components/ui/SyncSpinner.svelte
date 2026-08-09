@@ -1,9 +1,18 @@
 <script>
-  let { visible = false } = $props();
+  let { visible = false, error = '' } = $props();
+
+  let showError = $state(false);
+  let errorText = $state('');
+
+  $effect(() => {
+    if (error) { showError = true; errorText = error; setTimeout(() => showError = false, 5000); }
+  });
 </script>
 
 {#if visible}
-  <div class="sync-spinner" role="status" aria-live="polite" aria-label="Идёт синхронизация с сервером">Синхронизация...</div>
+  <div class="sync-spinner" class:error={showError} role="status" aria-live="polite" aria-label={showError ? errorText : 'Идёт синхронизация с сервером'}>
+    {showError ? errorText : 'Синхронизация...'}
+  </div>
 {/if}
 
 <style>
@@ -19,5 +28,7 @@
     border-top-color: #f5f5f7; border-radius: 50%;
     animation: spin .6s linear infinite;
   }
+  .sync-spinner.error { background: #e03131; }
+  .sync-spinner.error::before { border-top-color: #f5f5f7; }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>

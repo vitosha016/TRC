@@ -23,16 +23,12 @@
     days = Math.floor((entry.endAt - entry.createdAt) / 86400);
     hours = Math.floor(((entry.endAt - entry.createdAt) % 86400) / 3600);
   });
-  let submitting = $state(false);
 
-  async function submit(e) {
+  function submit(e) {
     e.preventDefault();
-    if (submitting) return;
     if (days === 0 && hours === 0) { alert('Укажи дни или часы'); return; }
-    submitting = true;
-    await doAdd(nick, type, days, hours, editId);
+    doAdd(nick, type, days, hours, editId);
     nick = ''; days = 0; hours = 0; editId = '';
-    submitting = false;
     requestAnimationFrame(() => {
       const inp = document.querySelector('#snick');
       if (inp) inp.focus();
@@ -68,8 +64,8 @@
     </div>
 
     <div class="btn-row">
-      <Button variant="main full" type="submit" disabled={submitting}>
-        {submitting ? '...' : editId ? 'Обновить' : 'Добавить'}
+      <Button variant="main full" type="submit">
+        {editId ? 'Обновить' : 'Добавить'}
       </Button>
     </div>
   </form>

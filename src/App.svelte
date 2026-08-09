@@ -8,7 +8,7 @@
   import SyncSpinner from './components/ui/SyncSpinner.svelte';
   import Button from './components/ui/Button.svelte';
   import { generateCopyText } from './utils/formulas.js';
-  import { buffs, history, template, syncing } from './utils/stores.js';
+  import { buffs, history, template, syncing, error } from './utils/stores.js';
 
   let giverNick = $state('');
   let editId = $state('');
@@ -53,7 +53,7 @@
 
   <LogList />
 
-  <SyncSpinner visible={$syncing > 0} />
+  <SyncSpinner visible={$syncing > 0 || !!$error} error={$error} />
 </div>
 
 <style>

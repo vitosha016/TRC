@@ -17,16 +17,24 @@ export function makeId() {
 
 /**
  * scoreBuff — оценка приоритета
- * @param {{ endAt: number, buff: number, type: string }} entry
+ * @param {{ endAt: number, buff: number, type: string, nick: string }} entry
  * @param {number} currentTime — unix timestamp в секундах
+ * @param {{ [nick: string]: { total: number } }} givers — статистика доноров (опционально)
  * @returns {{ left: number, saving: number, score: number }}
  */
-export function scoreBuff(entry, currentTime) {
+export function scoreBuff(entry, currentTime, givers) {
   const left = Math.max(0, entry.endAt - currentTime);
-  const saving = Math.round((left * (entry.applied || 0)) / 100);
-  const score = Math.round(
-    Math.round((left * (entry.buff || 0)) / 100) * (entry.type === "Стройка" ? 1.1 : 1.05),
-  );
+  const saving = Math.round(left * (entry.applied || 0) / 100);
+  let score = Math.round(Math.round(left * (entry.buff || 0) / 100) * (entry.type === 'Стройка' ? 1.1 : 1.05));
+
+  // Буст донатерам: топ-3 по количеству розданных баффов получают множитель
+  if (givers && entry.nick) {
+    const sorted = Object.entries(givers).sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
+    const rank = sorted.findIndex(([nick]) => nick.toLowerCase() === entry.nick.toLowerCase());
+    if (rank === 0) score = Math.round(score * 1.5);
+    else if (rank >= 1 && rank <= 2) score = Math.round(score * 1.25);
+  }
+
   return { left, saving, score };
 }
 
@@ -66,9 +74,9 @@ export function getQueueFireIds(items) {
  * @param {number} currentTime
  * @returns {Array} обогащённый и отсортированный массив
  */
-export function rankBuffsForQueue(items, currentTime) {
-  const enriched = items.map((item) => {
-    const { left, saving, score } = scoreBuff(item, currentTime);
+export function rankBuffsForQueue(items, currentTime, givers) {
+  const enriched = items.map(item => {
+    const { left, saving, score } = scoreBuff(item, currentTime, givers);
     return { ...item, left, saving, score };
   });
 
@@ -150,8 +158,8 @@ export function formatTimeShort(sec) {
 /**
  * Генерация текста для копирования в чат
  */
-export function generateCopyText({ buffs, template, currentTime }) {
-  const ranked = rankBuffsForQueue(buffs, currentTime);
+export function generateCopyText({ buffs, template, currentTime, givers }) {
+  const ranked = rankBuffsForQueue(buffs, currentTime, givers);
   const dateStr = new Date(currentTime * 1000).toLocaleDateString("ru-RU");
 
   function fmt(sec) {
