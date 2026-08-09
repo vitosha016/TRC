@@ -16,7 +16,7 @@
   onMount(() => {
     giverNick = localStorage.getItem('giver_nick') || '';
     doLoad();
-    const loadTimer = setInterval(doLoad, 15_000);
+    const loadTimer = setInterval(doLoad, 120_000);
     return () => clearInterval(loadTimer);
   });
 

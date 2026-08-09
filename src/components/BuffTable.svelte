@@ -13,6 +13,16 @@
   });
 
   function left(endAt) { return Math.max(0, endAt - now); }
+
+  function scoreTitle(e) {
+    const l = left(e.endAt);
+    const buff = e.buff || 0;
+    const boost = e.type === 'Стройка' ? 1.1 : 1.05;
+    const base = Math.round(Math.round(l * buff / 100) * boost);
+    const total = e.score;
+    const fire = e.queueFire ? '🔥 ' : '';
+    return `${fire}${e.nick} · score = round(round(${l} × ${buff} / 100) × ${boost}) = ${base}${total !== base ? ` — донатер ×${(total / base).toFixed(2)} → ${total}` : ''}`;
+  }
 </script>
 
 {#if $build.length === 0 && $research.length === 0}
@@ -30,7 +40,7 @@
           {@const l = left(e.endAt)}
           <tr class:fire={e.queueFire}>
             <td class="rank">{e.queueFire ? '!' : i + 1}</td>
-            <td class="name">{e.queueFire ? '🔥 ' : ''}{e.nick}</td>
+          <td class="name" title={scoreTitle(e)}>{e.queueFire ? '🔥 ' : ''}{e.nick}</td>
             <td class="time">{formatSeconds(l)}</td>
             <td class="saving">{formatSeconds(e.saving)}</td>
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
@@ -58,7 +68,7 @@
           {@const l = left(e.endAt)}
           <tr class:fire={e.queueFire}>
             <td class="rank">{e.queueFire ? '!' : i + 1}</td>
-            <td class="name">{e.queueFire ? '🔥 ' : ''}{e.nick}</td>
+          <td class="name" title={scoreTitle(e)}>{e.queueFire ? '🔥 ' : ''}{e.nick}</td>
             <td class="time">{formatSeconds(l)}</td>
             <td class="saving">{formatSeconds(e.saving)}</td>
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>

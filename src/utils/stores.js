@@ -133,7 +133,18 @@ export function doAdd(nick, type, days, hours, editId) {
     });
   } else {
     buffs.update((arr) => [
-      { id: makeId(), nick, type, buff: 0, endAt, createdAt: now, applied: 0, appliedCount: 0, queueReceived: 0, queueLastAt: 0 },
+      {
+        id: makeId(),
+        nick,
+        type,
+        buff: 0,
+        endAt,
+        createdAt: now,
+        applied: 0,
+        appliedCount: 0,
+        queueReceived: 0,
+        queueLastAt: 0,
+      },
       ...arr,
     ]);
   }
