@@ -21,7 +21,9 @@
     const base = Math.round(Math.round(l * buff / 100) * boost);
     const total = e.score;
     const fire = e.queueFire ? '🔥 ' : '';
-    return `${fire}${e.nick} · score = round(round(${l} × ${buff} / 100) × ${boost}) = ${base}${total !== base ? ` — донатер ×${(total / base).toFixed(2)} → ${total}` : ''}`;
+    return `${fire}${e.nick}\nscore = round(round(${l} × ${buff} / 100) × ${boost}) = ${base}` +
+      (total !== base ? `\nдонатер ×${(total / base).toFixed(2)} → ${total}` : '') +
+      `\nэкономия = round(${l} × ${e.applied || 0} / 100) = ${e.saving}`;
   }
 </script>
 

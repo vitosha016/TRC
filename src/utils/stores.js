@@ -126,7 +126,7 @@ export function doAdd(nick, type, days, hours, editId) {
     buffs.update((arr) => {
       const idx = arr.findIndex((b) => b.id === editId);
       if (idx === -1) return arr;
-      const updated = { ...arr[idx], nick, type, buff: 0, endAt, queueReceived: 0, queueLastAt: 0 };
+      const updated = { ...arr[idx], nick, type, endAt, queueReceived: 0, queueLastAt: 0 };
       const next = [...arr];
       next[idx] = updated;
       return next;
@@ -137,7 +137,7 @@ export function doAdd(nick, type, days, hours, editId) {
         id: makeId(),
         nick,
         type,
-        buff: 0,
+        buff: 15,
         endAt,
         createdAt: now,
         applied: 0,

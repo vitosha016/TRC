@@ -31,6 +31,7 @@ npm run dev
 Подробная инструкция: [src/api/README.md](src/api/README.md).
 
 Кратко:
+
 1. Создать Google-таблицу → **Расширения → Apps Script**
 2. Скопировать код из `src/api/googleAppScriptBackend.gs` в редактор
 3. **Развернуть → Новое развертывание → Веб-приложение**
@@ -86,10 +87,10 @@ Workflow: `.github/workflows/deploy.yml`
 
 ## API (GAS)
 
-| Метод   | Параметр     | Назначение                                                    |
-| ------- | ------------ | ------------------------------------------------------------- |
-| `GET`   | `?type=all`  | Получить все данные (buffs, history, givers, nicks, template) |
-| `POST`  | `?type=save` | Сохранить изменения                                           |
+| Метод  | Параметр     | Назначение                                                    |
+| ------ | ------------ | ------------------------------------------------------------- |
+| `GET`  | `?type=all`  | Получить все данные (buffs, history, givers, nicks, template) |
+| `POST` | `?type=save` | Сохранить изменения                                           |
 
 Бекенд — **pure data store**. Никакой логики, только CRUD в Google-таблицы. Вся математика на фронте.
 
@@ -129,6 +130,7 @@ score  = round(round(left × buff / 100) × boost)   // приоритет со�
 ### Буст донатерам
 
 Топ-3 по количеству розданных баффов:
+
 - **№1** → `score × 1.5`
 - **№2-3** → `score × 1.25`
 
@@ -143,6 +145,7 @@ score  = round(round(left × buff / 100) × boost)   // приоритет со�
 ### 🔥 queueFire
 
 Игрок получает 🔥, если в его категории:
+
 - есть хотя бы один уже получивший бафф (`queueReceived = 1`)
 - **и** неполучивших ∈ {1, 2}
 
@@ -151,6 +154,7 @@ score  = round(round(left × buff / 100) × boost)   // приоритет со�
 ### applyBuff — применение баффа
 
 5%/10%/15%:
+
 - `endAt = now + remaining × (1 − percent/100)`
 - `applied` += percent, `appliedCount` += 1
 - `queueReceived = 1`, `queueLastAt = now`
@@ -167,6 +171,7 @@ score  = round(round(left × buff / 100) × boost)   // приоритет со�
 ### Копирование в чат
 
 Формат:
+
 ```
 #X | дата
 • Игрок — Xд Yч
