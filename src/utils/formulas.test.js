@@ -301,32 +301,29 @@ describe("scoreBuff", () => {
     expect(score).toBe(0);
   });
 
-  it("донатер №1 получает множитель ×1.5 к score", () => {
-    const e = { endAt: MOCK_NOW + 100_000, buff: 15, applied: 0, nick: 'Alpha', type: 'Стройка' };
-    const givers = { 'Alpha': { total: 10 }, 'Bravo': { total: 3 }, 'Charlie': { total: 1 } };
+  it("донатер №1 получает множитель ×3 к score", () => {
+    const e = { endAt: MOCK_NOW + 100_000, buff: 15, applied: 0, nick: "Alpha", type: "Стройка" };
+    const givers = { Alpha: { total: 10 }, Bravo: { total: 3 }, Charlie: { total: 1 } };
     const { score } = scoreBuff(e, MOCK_NOW, givers);
-    // base: round(round(100000*15/100)*1.1) = round(15000*1.1) = 16500
-    // donor boost ×1.5 = 24750
-    expect(score).toBe(24750);
+    expect(score).toBe(49500); // 16500 × 3
   });
 
-  it("донатер №2-3 получает множитель ×1.25", () => {
-    const e = { endAt: MOCK_NOW + 100_000, buff: 15, applied: 0, nick: 'Charlie', type: 'Стройка' };
-    const givers = { 'Alpha': { total: 10 }, 'Bravo': { total: 3 }, 'Charlie': { total: 1 } };
+  it("донатер №2-3 получает множитель ×2", () => {
+    const e = { endAt: MOCK_NOW + 100_000, buff: 15, applied: 0, nick: "Charlie", type: "Стройка" };
+    const givers = { Alpha: { total: 10 }, Bravo: { total: 3 }, Charlie: { total: 1 } };
     const { score } = scoreBuff(e, MOCK_NOW, givers);
-    // base: 16500, rank 2 → ×1.25 = 20625
-    expect(score).toBe(20625);
+    expect(score).toBe(33000); // 16500 × 2
   });
 
   it("не-донатер не получает буст", () => {
-    const e = { endAt: MOCK_NOW + 100_000, buff: 15, applied: 0, nick: 'Delta', type: 'Стройка' };
-    const givers = { 'Alpha': { total: 10 }, 'Bravo': { total: 3 }, 'Charlie': { total: 1 } };
+    const e = { endAt: MOCK_NOW + 100_000, buff: 15, applied: 0, nick: "Delta", type: "Стройка" };
+    const givers = { Alpha: { total: 10 }, Bravo: { total: 3 }, Charlie: { total: 1 } };
     const { score } = scoreBuff(e, MOCK_NOW, givers);
     expect(score).toBe(16500);
   });
 
   it("без givers — без буста (обратная совместимость)", () => {
-    const e = { endAt: MOCK_NOW + 100_000, buff: 15, applied: 0, nick: 'Alpha', type: 'Стройка' };
+    const e = { endAt: MOCK_NOW + 100_000, buff: 15, applied: 0, nick: "Alpha", type: "Стройка" };
     const { score } = scoreBuff(e, MOCK_NOW);
     expect(score).toBe(16500);
   });

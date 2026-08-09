@@ -24,15 +24,17 @@ export function makeId() {
  */
 export function scoreBuff(entry, currentTime, givers) {
   const left = Math.max(0, entry.endAt - currentTime);
-  const saving = Math.round(left * (entry.applied || 0) / 100);
-  let score = Math.round(Math.round(left * (entry.buff || 0) / 100) * (entry.type === 'Стройка' ? 1.1 : 1.05));
+  const saving = Math.round((left * (entry.applied || 0)) / 100);
+  let score = Math.round(
+    Math.round((left * (entry.buff || 0)) / 100) * (entry.type === "Стройка" ? 1.1 : 1.05),
+  );
 
   // Буст донатерам: топ-3 по количеству розданных баффов получают множитель
   if (givers && entry.nick) {
     const sorted = Object.entries(givers).sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
     const rank = sorted.findIndex(([nick]) => nick.toLowerCase() === entry.nick.toLowerCase());
-    if (rank === 0) score = Math.round(score * 1.5);
-    else if (rank >= 1 && rank <= 2) score = Math.round(score * 1.25);
+    if (rank === 0) score = Math.round(score * 3);
+    else if (rank >= 1 && rank <= 2) score = Math.round(score * 2);
   }
 
   return { left, saving, score };
@@ -75,7 +77,7 @@ export function getQueueFireIds(items) {
  * @returns {Array} обогащённый и отсортированный массив
  */
 export function rankBuffsForQueue(items, currentTime, givers) {
-  const enriched = items.map(item => {
+  const enriched = items.map((item) => {
     const { left, saving, score } = scoreBuff(item, currentTime, givers);
     return { ...item, left, saving, score };
   });
