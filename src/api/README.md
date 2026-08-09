@@ -34,7 +34,7 @@
 Создай файл `.env` в корне проекта и добавь:
 
 ```env
-VITE_GAS_ID=<идентификатор_развертывания>
+PUBLIC_PROD_GOOGLE_APPSCRIPT_ID=<идентификатор_развертывания>
 ```
 
 ### 7. Сбилдить и задеплоить
@@ -145,5 +145,5 @@ Google AppScript WebApp **не поддерживает** CORS-заголовк�
 Для локальной разработки создай отдельную копию таблицы.
 
 ```env
-VITE_GAS_ID=AKfycbw...
+PUBLIC_PROD_GOOGLE_APPSCRIPT_ID=AKfycbw...
 ```

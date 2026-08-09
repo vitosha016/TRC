@@ -1,4 +1,4 @@
-const GAS = `https://script.google.com/macros/s/${import.meta.env.VITE_GAS_ID}/exec`;
+const GAS = `https://script.google.com/macros/s/${import.meta.env.PUBLIC_PROD_GOOGLE_APPSCRIPT_ID}/exec`;
 
 export async function gasGet() {
   const r = await fetch(GAS + '?type=all', { redirect: 'follow' });
