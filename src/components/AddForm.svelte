@@ -10,15 +10,26 @@
 
   let searching = $state('');
   let showDrop = $state(false);
+  let focusIdx = $state(-1);
   let matches = $derived(
     searching ? $nickList.filter(n => n.toLowerCase().includes(searching.toLowerCase())).slice(0, 10) : []
   );
 
-  function pick(n) { nick = n; showDrop = false; }
+  function pick(n) { nick = n; showDrop = false; focusIdx = -1; }
+
+  function onKeydown(e) {
+    if (!showDrop || !matches.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); focusIdx = (focusIdx + 1) % matches.length; }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); focusIdx = (focusIdx - 1 + matches.length) % matches.length; }
+    else if (e.key === 'Enter' && focusIdx >= 0) { e.preventDefault(); pick(matches[focusIdx]); }
+    else if (e.key === 'Escape') { showDrop = false; focusIdx = -1; }
+    else { focusIdx = -1; }
+  }
 
   async function submit(e) {
     e.preventDefault();
     if (submitting) return;
+    if (days === 0 && hours === 0) { alert('Укажи дни или часы'); return; }
     submitting = true;
     await doAdd(nick, type, days, hours, editId);
     nick = ''; days = 0; hours = 0; editId = '';
@@ -38,12 +49,13 @@
         <div class="input-wrap">
           <input id="nickInput" bind:value={nick} placeholder="Имя игрока" required
             onfocus={() => showDrop = nick.trim().length > 0}
-            oninput={() => { searching = nick; showDrop = true; }}
+            oninput={() => { searching = nick; showDrop = true; focusIdx = -1; }}
+            onkeydown={onKeydown}
             onblur={() => setTimeout(() => showDrop = false, 150)} />
           {#if showDrop && matches.length}
             <div class="dropdown show">
-              {#each matches as n}
-                <div class="opt" role="button" tabindex="0" onmousedown={(e) => { e.preventDefault(); pick(n); }}><strong>{n}</strong></div>
+              {#each matches as n, i}
+                <div class="opt" class:focused={i === focusIdx} role="option" tabindex="0" aria-selected={i === focusIdx} onmousedown={(e) => { e.preventDefault(); pick(n); }}><strong>{n}</strong></div>
               {/each}
             </div>
           {/if}
@@ -109,7 +121,7 @@
   }
   .dropdown.show { display: block; }
   .opt { padding: 7px 10px; font-size: 13px; cursor: pointer; border-bottom: 1px solid #e0e0e4; }
-  .opt:hover { background: #e0e0e4; }
+  .opt:hover, .opt.focused { background: #e0e0e4; }
   .opt:last-child { border-bottom: 0; }
 
   .btn {

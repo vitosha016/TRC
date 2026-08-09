@@ -13,11 +13,21 @@
 
   let giverSearch = $state('');
   let giverDrop = $state(false);
+  let giverFocus = $state(-1);
   let giverMatches = $derived(
     giverSearch ? $nickList.filter(n => n.toLowerCase().includes(giverSearch.toLowerCase())).slice(0, 8) : []
   );
 
-  function pickGiver(n) { giverNick = n; giverDrop = false; saveGiver(); }
+  function pickGiver(n) { giverNick = n; giverDrop = false; giverFocus = -1; saveGiver(); }
+
+  function giverKey(e) {
+    if (!giverDrop || !giverMatches.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); giverFocus = (giverFocus + 1) % giverMatches.length; }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); giverFocus = (giverFocus - 1 + giverMatches.length) % giverMatches.length; }
+    else if (e.key === 'Enter' && giverFocus >= 0) { e.preventDefault(); pickGiver(giverMatches[giverFocus]); }
+    else if (e.key === 'Escape') { giverDrop = false; giverFocus = -1; }
+    else { giverFocus = -1; }
+  }
   function saveGiver() { const v = giverNick.trim(); localStorage.setItem('giver_nick', v); if (v) addNick(v); }
 
   onMount(() => {
@@ -54,13 +64,14 @@
         autocomplete="off"
         bind:value={giverNick}
         onfocus={() => giverDrop = giverNick.trim().length > 0}
-        oninput={() => { giverSearch = giverNick; giverDrop = true; }}
+        oninput={() => { giverSearch = giverNick; giverDrop = true; giverFocus = -1; }}
+        onkeydown={giverKey}
         onblur={() => { setTimeout(() => giverDrop = false, 150); saveGiver(); }}
       />
       {#if giverDrop && giverMatches.length}
         <div class="dropdown show">
-          {#each giverMatches as n}
-            <div class="opt" role="button" tabindex="0" onmousedown={(e) => { e.preventDefault(); pickGiver(n); }}>{n}</div>
+          {#each giverMatches as n, i}
+            <div class="opt" class:focused={i === giverFocus} role="option" tabindex="0" aria-selected={i === giverFocus} onmousedown={(e) => { e.preventDefault(); pickGiver(n); }}>{n}</div>
           {/each}
         </div>
       {/if}
@@ -101,7 +112,7 @@
   }
   .dropdown.show { display: block; }
   .opt { padding: 7px 10px; font-size: 13px; cursor: pointer; border-bottom: 1px solid #e0e0e4; }
-  .opt:hover { background: #e0e0e4; }
+  .opt:hover, .opt.focused { background: #e0e0e4; }
   .opt:last-child { border-bottom: 0; }
 
   .btn {
