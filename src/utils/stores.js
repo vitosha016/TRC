@@ -74,9 +74,6 @@ export async function doApply(buffId, percent, giverNick) {
 
   let currentBuffs;
   buffs.subscribe((v) => (currentBuffs = v))();
-  history.subscribe((v) => (_currentHistory = v))();
-  givers.subscribe((v) => (_currentGivers = v))();
-  nickList.subscribe((v) => (_currentNicks = v))();
 
   const body = { buffs: currentBuffs, historyEntry: histEntry };
   if (giverNick && giverNick !== "Не указан") {
