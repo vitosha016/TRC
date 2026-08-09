@@ -294,11 +294,11 @@ describe("scoreBuff", () => {
     expect(score).toBe(Math.round(Math.round((left * 15) / 100) * 1.05)); // 167_804 — score всё ещё от buff
   });
 
-  it("buff=0 использует 15 как дефолт для score, но saving от applied", () => {
-    const e = { endAt: MOCK_NOW + 100_000, buff: 0, applied: 30, nick: "Alpha", type: "Стройка" };
+  it("buff=0 → saving=0, score=0", () => {
+    const e = { endAt: MOCK_NOW + 999_999, buff: 0, applied: 0, type: "Стройка" };
     const { saving, score } = scoreBuff(e, MOCK_NOW);
-    expect(saving).toBe(30000); // 100000 × 30 / 100
-    expect(score).toBe(16500);  // 100000 × 15 / 100 × 1.1
+    expect(saving).toBe(0);
+    expect(score).toBe(0);
   });
 
   it("донатер №1 получает множитель ×1.5 к score", () => {

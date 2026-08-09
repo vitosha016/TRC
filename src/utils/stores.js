@@ -13,8 +13,8 @@ export const error = writable("");
 onSync((v) => syncing.set(v));
 
 function bgFail() {
-  error.set("Ошибка синхронизации");
-  doLoad().finally(() => error.set(""));
+  error.set('Ошибка синхронизации');
+  doLoad().then(() => setTimeout(() => error.set(''), 4000));
 }
 
 // Деривативы
@@ -123,7 +123,7 @@ export function doAdd(nick, type, days, hours, editId) {
       if (entry) {
         entry.nick = nick;
         entry.type = type;
-        entry.buff = 15;
+        entry.buff = 0;
         entry.endAt = endAt;
         entry.queueReceived = 0;
         entry.queueLastAt = 0;
@@ -136,7 +136,7 @@ export function doAdd(nick, type, days, hours, editId) {
         id: makeId(),
         nick,
         type,
-        buff: 15,
+        buff: 0,
         endAt,
         createdAt: now,
         applied: 0,

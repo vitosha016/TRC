@@ -10,7 +10,7 @@
   }
 </script>
 
-<details class="log" open={items.length < 5}>
+<details class="log" open={items.length > 0 && items.length < 5}>
   <summary>История транзакций</summary>
   {#if items.length === 0}
     <div class="empty">Пока транзакций нет</div>
