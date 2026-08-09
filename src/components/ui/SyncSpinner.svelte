@@ -3,7 +3,7 @@
 </script>
 
 {#if visible}
-  <div class="sync-spinner">Синхронизация...</div>
+  <div class="sync-spinner" role="status" aria-live="polite" aria-label="Идёт синхронизация с сервером">Синхронизация...</div>
 {/if}
 
 <style>

@@ -1,7 +1,8 @@
 <script>
   let {
     value = $bindable(), placeholder = '', label = '',
-    id = '', onfocus, oninput, onkeydown, onblur
+    id = '', onfocus, oninput, onkeydown, onblur,
+    role = '', ariaExpanded = undefined, ariaControls = '', ariaActiveDescendant = '',
   } = $props();
 
   let cid = $derived(id || 'i_' + Math.random().toString(36).slice(2, 8));
@@ -16,6 +17,10 @@
   bind:value
   {placeholder}
   aria-label={!label ? placeholder : undefined}
+  role={role || undefined}
+  aria-expanded={ariaExpanded}
+  aria-controls={ariaControls || undefined}
+  aria-activedescendant={ariaActiveDescendant || undefined}
   autocomplete="off"
   {onfocus}
   {oninput}

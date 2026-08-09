@@ -1,15 +1,15 @@
 const GAS = `https://script.google.com/macros/s/${import.meta.env.PUBLIC_PROD_GOOGLE_APPSCRIPT_ID}/exec`;
 
 export async function gasGet() {
-  const r = await fetch(GAS + '?type=all', { redirect: 'follow' });
+  const r = await fetch(GAS + "?type=all", { redirect: "follow" });
   return r.json();
 }
 
 export async function gasSave(data) {
-  const r = await fetch(GAS + '?type=save', {
-    method: 'POST',
-    redirect: 'follow',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+  const r = await fetch(GAS + "?type=save", {
+    method: "POST",
+    redirect: "follow",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(data),
   });
   return r.json();
@@ -17,15 +17,23 @@ export async function gasSave(data) {
 
 let syncing = 0;
 let syncCb = null;
-export function onSync(fn) { syncCb = fn; }
+export function onSync(fn) {
+  syncCb = fn;
+}
 
-export function getSyncing() { return syncing > 0; }
+export function getSyncing() {
+  return syncing > 0;
+}
 
 async function track(p) {
   syncing++;
   syncCb?.(syncing);
-  try { return await p; }
-  finally { syncing--; syncCb?.(syncing); }
+  try {
+    return await p;
+  } finally {
+    syncing--;
+    syncCb?.(syncing);
+  }
 }
 
 export function loadAll() {

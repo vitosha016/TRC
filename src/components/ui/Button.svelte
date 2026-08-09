@@ -1,5 +1,5 @@
 <script>
-  let { variant = '', onclick, type = 'button', disabled = false, children } = $props();
+  let { variant = '', onclick, type = 'button', disabled = false, title = '', children } = $props();
 
   let variants = $derived(variant.split(' ').filter(Boolean));
   let isMain = $derived(variants.includes('main'));
@@ -15,6 +15,8 @@
   {type}
   {disabled}
   {onclick}
+  aria-label={title || undefined}
+  {title}
 >
   {@render children?.()}
 </button>

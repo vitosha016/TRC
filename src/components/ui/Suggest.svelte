@@ -3,6 +3,9 @@
 
   let { value = $bindable(), items = [], placeholder = '', label = '', id = '', onpick, onsave } = $props();
 
+  let cid = $derived(id || 'sg_' + Math.random().toString(36).slice(2, 8));
+  let listId = $derived(cid + '_list');
+
   let searching = $state('');
   let open = $state(false);
   let focusing = $state(-1);
@@ -11,6 +14,8 @@
   );
 
   function pick(n) { value = n; open = false; focusing = -1; onpick?.(n); }
+
+  let actId = $derived(focusing >= 0 && focusing < matches.length ? listId + '_' + focusing : '');
 
   function onKey(e) {
     if (!open || !matches.length) return;
@@ -24,19 +29,29 @@
 
 <div class="wrap">
   <Input
-    {id}
+    id={cid}
     {label}
+    role="combobox"
     bind:value
     {placeholder}
+    ariaExpanded={open}
+    ariaControls={open ? listId : ''}
+    ariaActiveDescendant={open ? actId : ''}
     onfocus={() => open = value.trim().length > 0}
     oninput={() => { searching = value; open = true; focusing = -1; }}
     onkeydown={onKey}
     onblur={() => { setTimeout(() => open = false, 150); onsave?.(); }}
   />
   {#if open && matches.length}
-    <div class="dropdown show">
+    <div class="dropdown show" id={listId} role="listbox">
       {#each matches as n, i}
-        <div class="opt" class:focused={i === focusing} role="option" tabindex="0" aria-selected={i === focusing} onmousedown={(e) => { e.preventDefault(); pick(n); }}>{n}</div>
+        <div
+          class="opt" class:focused={i === focusing}
+          id={listId + '_' + i}
+          role="option" tabindex="0"
+          aria-selected={i === focusing}
+          onmousedown={(e) => { e.preventDefault(); pick(n); }}
+        >{n}</div>
       {/each}
     </div>
   {/if}

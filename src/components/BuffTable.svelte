@@ -15,7 +15,7 @@
 </script>
 
 {#if $build.length === 0 && $research.length === 0}
-  <div class="empty">Очередь пуста. Добавьте первого участника.</div>
+  <div class="empty" role="status">Очередь пуста. Добавьте первого участника.</div>
 {/if}
 
 <div class="grid">
@@ -23,7 +23,7 @@
     <div class="card">
       <div class="card-title">🪚 Стройка <span class="cnt">{$build.length}</span></div>
       <table>
-        <thead><tr><th>#</th><th>Игрок</th><th>Осталось</th><th>Экономия</th><th>Выдано</th><th class="th-act">Действия</th></tr></thead>
+        <thead><tr><th scope="col">#</th><th scope="col">Игрок</th><th scope="col">Осталось</th><th scope="col">Экономия</th><th scope="col">Выдано</th><th scope="col" class="th-act">Действия</th></tr></thead>
         <tbody>
         {#each $build as e, i}
           {@const l = left(e.endAt)}
@@ -35,10 +35,10 @@
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
             <td class="act">
               {#each [5, 10, 15] as p}
-                <Button variant="small" onclick={() => doApply(e.id, p, giverNick)}>{p}%</Button>
+                <Button variant="small" onclick={() => doApply(e.id, p, giverNick)} title="Ускорить {e.nick} на {p}%">{p}%</Button>
               {/each}
-              <Button variant="small" onclick={() => onedit(e.id)} title="Редактировать">✎</Button>
-              <Button variant="danger small" onclick={() => doDelete(e.id)}>✕</Button>
+              <Button variant="small" onclick={() => onedit(e.id)} title="Редактировать {e.nick}">✎</Button>
+              <Button variant="danger small" onclick={() => doDelete(e.id)} title="Удалить {e.nick}">✕</Button>
             </td>
           </tr>
         {/each}
@@ -51,7 +51,7 @@
     <div class="card">
       <div class="card-title">🔬 Исследования <span class="cnt">{$research.length}</span></div>
       <table>
-        <thead><tr><th>#</th><th>Игрок</th><th>Осталось</th><th>Экономия</th><th>Выдано</th><th class="th-act">Действия</th></tr></thead>
+        <thead><tr><th scope="col">#</th><th scope="col">Игрок</th><th scope="col">Осталось</th><th scope="col">Экономия</th><th scope="col">Выдано</th><th scope="col" class="th-act">Действия</th></tr></thead>
         <tbody>
         {#each $research as e, i}
           {@const l = left(e.endAt)}
@@ -63,10 +63,10 @@
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
             <td class="act">
               {#each [5, 10, 15] as p}
-                <Button variant="small" onclick={() => doApply(e.id, p, giverNick)}>{p}%</Button>
+                <Button variant="small" onclick={() => doApply(e.id, p, giverNick)} title="Ускорить {e.nick} на {p}%">{p}%</Button>
               {/each}
-              <Button variant="small" onclick={() => onedit(e.id)} title="Редактировать">✎</Button>
-              <Button variant="danger small" onclick={() => doDelete(e.id)}>✕</Button>
+              <Button variant="small" onclick={() => onedit(e.id)} title="Редактировать {e.nick}">✎</Button>
+              <Button variant="danger small" onclick={() => doDelete(e.id)} title="Удалить {e.nick}">✕</Button>
             </td>
           </tr>
         {/each}
