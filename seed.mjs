@@ -1,6 +1,7 @@
 import { writeFileSync } from 'fs';
 
-const BASE = 'https://script.google.com/macros/s/AKfycbwKiUPJQkV32WLMfdiyApoAR8e2IimUOgvnzQYjuubjm-n7kNYYUIyD5etpXX6XX-WzOQ/exec';
+const GAS_ID = process.env.VITE_GAS_ID || 'AKfycbwKiUPJQkV32WLMfdiyApoAR8e2IimUOgvnzQYjuubjm-n7kNYYUIyD5etpXX6XX-WzOQ';
+const BASE = `https://script.google.com/macros/s/${GAS_ID}/exec`;
 
 async function gasGet() {
   const r = await fetch(`${BASE}?type=all`, { redirect: 'follow' });

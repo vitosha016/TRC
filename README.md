@@ -24,7 +24,7 @@
 1. Создать гуглотаблицу → Extensions → Apps Script
 2. Скопировать код из `src/api/googleAppScriptBackend.gs`
 3. Опубликовать как WebApp → скопировать ID
-4. Прописать `PUBLIC_PROD_GOOGLE_APPSCRIPT_ID` в `.env`
+4. Прописать `VITE_GAS_ID` в `.env` (see `.env.sample`)
 5. `npm run build` → задеплоить `/dist`
 
 ## API

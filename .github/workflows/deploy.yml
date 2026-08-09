@@ -13,6 +13,8 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npm run build
+        env:
+          VITE_GAS_ID: ${{ secrets.VITE_GAS_ID }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/
