@@ -28,6 +28,7 @@
 См. [src/api/README.md](src/api/README.md) — пошаговая инструкция.
 
 Кратко:
+
 1. Создать гуглотаблицу → Extensions → Apps Script
 2. Скопировать код из `src/api/googleAppScriptBackend.gs`
 3. Опубликовать как WebApp → скопировать ID
@@ -36,10 +37,10 @@
 
 ## API
 
-| Метод | Параметр | Назначение |
-|-------|----------|-----------|
-| `GET` | `?type=all` | Получить все данные (buffs, history, givers, nicks, template) |
-| `POST` | `?type=save` | Сохранить изменения |
+| Метод  | Параметр     | Назначение                                                    |
+| ------ | ------------ | ------------------------------------------------------------- |
+| `GET`  | `?type=all`  | Получить все данные (buffs, history, givers, nicks, template) |
+| `POST` | `?type=save` | Сохранить изменения                                           |
 
 Бекенд отвечает только за хранение. Вся логика подсчёта — на фронте.
 
@@ -82,6 +83,7 @@ score  = round(round(left × buffRate / 100) × boost)  // приоритет
 ### Правило 🔥 (queueFire)
 
 Игрок получает 🔥, если **в его категории** (Стройка / Исследования):
+
 - есть хотя бы один уже получивший бафф в этом круге (`queueReceived = 1`)
 - **и** количество неполучивших ∈ {1, 2}
 
@@ -90,6 +92,7 @@ score  = round(round(left × buffRate / 100) × boost)  // приоритет
 ### Применение баффа (applyBuff)
 
 При нажатии 5%/10%/15%:
+
 - `endAt = now + remaining × (1 − percent/100)` — оставшееся время сокращается
 - `applied` += percent, `appliedCount` += 1
 - `queueReceived = 1`, `queueLastAt = now`

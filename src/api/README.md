@@ -49,13 +49,13 @@ npm run build
 
 После первого запроса скрипт **автоматически создаст** нужные листы:
 
-| Лист | Назначение |
-|------|-----------|
-| `Buffs` | Очередь баффов (id, nick, type, buff, endAt, ...) |
-| `History` | История выдач (id, recipient_id, recipient, type, giver, percent, time) |
-| `Givers` | Статистика доноров (nick, total, last_buff) |
-| `Nicks` | Сохранённые ники (nick) |
-| `Template` | Шаблон копирования в чат (key, value) |
+| Лист       | Назначение                                                              |
+| ---------- | ----------------------------------------------------------------------- |
+| `Buffs`    | Очередь баффов (id, nick, type, buff, endAt, ...)                       |
+| `History`  | История выдач (id, recipient_id, recipient, type, giver, percent, time) |
+| `Givers`   | Статистика доноров (nick, total, last_buff)                             |
+| `Nicks`    | Сохранённые ники (nick)                                                 |
+| `Template` | Шаблон копирования в чат (key, value)                                   |
 
 Ничего заполнять вручную не нужно — данные попадают в таблицы через API.
 
@@ -135,6 +135,7 @@ npm run build
 Google AppScript WebApp **не поддерживает** CORS-заголовки напрямую.
 
 **Варианты решения:**
+
 - **Прокси на уровне хостинга** — Vercel/Netlify могут проксировать запросы к GAS
 - **CORS Proxy** — для локальной разработки
 

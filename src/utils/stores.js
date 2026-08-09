@@ -1,5 +1,5 @@
 import { writable, derived } from "svelte/store";
-import { loadAll, bgSave, onSync, getSyncing } from "./api.js";
+import { loadAll, bgSave, onSync } from "./api.js";
 import { scoreBuff, getQueueFireIds, makeId } from "./formulas.js";
 
 export const buffs = writable([]);
@@ -72,11 +72,11 @@ export async function doApply(buffId, percent, giverNick) {
     });
   }
 
-  let currentBuffs, currentHistory, currentGivers, currentNicks;
+  let currentBuffs;
   buffs.subscribe((v) => (currentBuffs = v))();
-  history.subscribe((v) => (currentHistory = v))();
-  givers.subscribe((v) => (currentGivers = v))();
-  nickList.subscribe((v) => (currentNicks = v))();
+  history.subscribe((v) => (_currentHistory = v))();
+  givers.subscribe((v) => (_currentGivers = v))();
+  nickList.subscribe((v) => (_currentNicks = v))();
 
   const body = { buffs: currentBuffs, historyEntry: histEntry };
   if (giverNick && giverNick !== "Не указан") {

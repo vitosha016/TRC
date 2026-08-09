@@ -2,8 +2,8 @@ pre-commit:
   parallel: true
   commands:
     format:
-      glob: "*.{js,mjs,svelte,css,json,html}"
+      glob: "*.{js,mjs,gs,svelte,css,json,html,yml,md}"
       run: npx oxfmt {staged_files}
     lint:
       glob: "*.{js,mjs}"
-      run: npx oxlint --quiet {staged_files}
+      run: npx oxlint --fix {staged_files}

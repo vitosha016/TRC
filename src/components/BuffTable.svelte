@@ -2,6 +2,7 @@
   import { build, research, doApply, doDelete, nowSec } from '../utils/stores.js';
   import { formatSeconds } from '../utils/formulas.js';
   import Button from './ui/Button.svelte';
+  import Card from './ui/Card.svelte';
 
   let { giverNick = '', onedit = (id) => {} } = $props();
 
@@ -20,8 +21,8 @@
 
 <div class="grid">
   {#if $build.length}
-    <div class="card">
-      <div class="card-title">🪚 Стройка <span class="cnt">{$build.length}</span></div>
+    <Card>
+      <div class="card-title">🔨 Стройка <span class="cnt">{$build.length}</span></div>
       <table>
         <thead><tr><th scope="col">#</th><th scope="col">Игрок</th><th scope="col">Осталось</th><th scope="col">Экономия</th><th scope="col">Выдано</th><th scope="col" class="th-act">Действия</th></tr></thead>
         <tbody>
@@ -44,11 +45,11 @@
         {/each}
         </tbody>
       </table>
-    </div>
+    </Card>
   {/if}
 
   {#if $research.length}
-    <div class="card">
+    <Card>
       <div class="card-title">🔬 Исследования <span class="cnt">{$research.length}</span></div>
       <table>
         <thead><tr><th scope="col">#</th><th scope="col">Игрок</th><th scope="col">Осталось</th><th scope="col">Экономия</th><th scope="col">Выдано</th><th scope="col" class="th-act">Действия</th></tr></thead>
@@ -72,7 +73,7 @@
         {/each}
         </tbody>
       </table>
-    </div>
+    </Card>
   {/if}
 </div>
 
@@ -85,11 +86,6 @@
 
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
-  }
-
-  .card {
-    background: #fff; border: 1px solid #e0e0e4;
-    border-radius: 10px; padding: 14px 16px; overflow-x: auto;
   }
 
   .card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
@@ -113,4 +109,11 @@
   .act { text-align: right; white-space: nowrap; }
 
   .empty { text-align: center; padding: 40px; color: #86868b; grid-column: 1 / -1; }
+
+  @media (max-width: 600px) {
+    .act { white-space: normal; display: flex; flex-wrap: wrap; gap: 2px; justify-content: flex-end; }
+    .act :global(.btn) { margin-bottom: 2px; }
+    .count { display: none; }
+    td, th { padding: 4px 3px; font-size: 11px; }
+  }
 </style>

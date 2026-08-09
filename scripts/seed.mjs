@@ -1,5 +1,3 @@
-import { writeFileSync } from "fs";
-
 const GAS_ID = process.env.PUBLIC_PROD_GOOGLE_APPSCRIPT_ID;
 if (!GAS_ID) throw new Error("PUBLIC_PROD_GOOGLE_APPSCRIPT_ID not set in environment");
 const BASE = `https://script.google.com/macros/s/${GAS_ID}/exec`;

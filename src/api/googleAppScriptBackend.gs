@@ -15,10 +15,10 @@ function doPost(e) {
     var postData = e.postData ? JSON.parse(e.postData.contents) : {};
 
     switch (params.type) {
-      case 'save':
+      case "save":
         return json(handleSave(postData));
       default:
-        return json({ ok: false, error: 'Unknown type: ' + params.type });
+        return json({ ok: false, error: "Unknown type: " + params.type });
     }
   } catch (error) {
     return json({ ok: false, error: String(error) });
@@ -35,10 +35,10 @@ function doGet(e) {
     var params = e.parameter || {};
 
     switch (params.type) {
-      case 'all':
+      case "all":
         return json(handleGetAll());
       default:
-        return json({ ok: false, error: 'Unknown type: ' + params.type });
+        return json({ ok: false, error: "Unknown type: " + params.type });
     }
   } catch (error) {
     return json({ ok: false, error: String(error) });
@@ -56,7 +56,7 @@ function handleGetAll() {
     history: getHistory(),
     givers: getGivers(),
     nicks: getNicks(),
-    template: getTemplate()
+    template: getTemplate(),
   };
 }
 
@@ -74,15 +74,26 @@ function handleSave(postData) {
     history: getHistory(),
     givers: getGivers(),
     nicks: getNicks(),
-    template: getTemplate()
+    template: getTemplate(),
   };
 }
 
 // === SHEET: Buffs ==========================================
 
 function getBuffs() {
-  var headers = ['id', 'nick', 'type', 'buff', 'endAt', 'createdAt', 'applied', 'appliedCount', 'queueReceived', 'queueLastAt'];
-  var sheet = getOrCreateSheet('Buffs', headers);
+  var headers = [
+    "id",
+    "nick",
+    "type",
+    "buff",
+    "endAt",
+    "createdAt",
+    "applied",
+    "appliedCount",
+    "queueReceived",
+    "queueLastAt",
+  ];
+  var sheet = getOrCreateSheet("Buffs", headers);
   var data = sheet.getDataRange().getValues();
   var result = [];
 
@@ -99,7 +110,7 @@ function getBuffs() {
       applied: Number(row[6]) || 0,
       appliedCount: Number(row[7]) || 0,
       queueReceived: Number(row[8]) || 0,
-      queueLastAt: Number(row[9]) || 0
+      queueLastAt: Number(row[9]) || 0,
     });
   }
 
@@ -107,15 +118,37 @@ function getBuffs() {
 }
 
 function setBuffs(buffsArray) {
-  var headers = ['id', 'nick', 'type', 'buff', 'endAt', 'createdAt', 'applied', 'appliedCount', 'queueReceived', 'queueLastAt'];
-  var sheet = getOrCreateSheet('Buffs', headers);
+  var headers = [
+    "id",
+    "nick",
+    "type",
+    "buff",
+    "endAt",
+    "createdAt",
+    "applied",
+    "appliedCount",
+    "queueReceived",
+    "queueLastAt",
+  ];
+  var sheet = getOrCreateSheet("Buffs", headers);
   sheet.clearContents();
   sheet.appendRow(headers);
 
   if (buffsArray.length === 0) return;
 
-  var rows = buffsArray.map(function(b) {
-    return [b.id, b.nick, b.type, b.buff, b.endAt, b.createdAt, b.applied, b.appliedCount, b.queueReceived, b.queueLastAt];
+  var rows = buffsArray.map(function (b) {
+    return [
+      b.id,
+      b.nick,
+      b.type,
+      b.buff,
+      b.endAt,
+      b.createdAt,
+      b.applied,
+      b.appliedCount,
+      b.queueReceived,
+      b.queueLastAt,
+    ];
   });
 
   sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
@@ -124,8 +157,8 @@ function setBuffs(buffsArray) {
 // === SHEET: History ========================================
 
 function getHistory() {
-  var headers = ['id', 'recipient_id', 'recipient', 'type', 'giver', 'percent', 'time'];
-  var sheet = getOrCreateSheet('History', headers);
+  var headers = ["id", "recipient_id", "recipient", "type", "giver", "percent", "time"];
+  var sheet = getOrCreateSheet("History", headers);
   var data = sheet.getDataRange().getValues();
   var result = [];
 
@@ -139,7 +172,7 @@ function getHistory() {
       type: row[3],
       giver: row[4],
       percent: Number(row[5]) || 0,
-      time: Number(row[6]) || 0
+      time: Number(row[6]) || 0,
     });
   }
 
@@ -147,15 +180,23 @@ function getHistory() {
 }
 
 function addHistory(entry) {
-  var headers = ['id', 'recipient_id', 'recipient', 'type', 'giver', 'percent', 'time'];
-  var sheet = getOrCreateSheet('History', headers);
-  sheet.appendRow([entry.id, entry.recipient_id, entry.recipient, entry.type, entry.giver, entry.percent, entry.time]);
+  var headers = ["id", "recipient_id", "recipient", "type", "giver", "percent", "time"];
+  var sheet = getOrCreateSheet("History", headers);
+  sheet.appendRow([
+    entry.id,
+    entry.recipient_id,
+    entry.recipient,
+    entry.type,
+    entry.giver,
+    entry.percent,
+    entry.time,
+  ]);
 }
 
 // === SHEET: Givers =========================================
 
 function getGivers() {
-  var sheet = getOrCreateSheet('Givers', ['nick', 'total', 'last_buff']);
+  var sheet = getOrCreateSheet("Givers", ["nick", "total", "last_buff"]);
   var data = sheet.getDataRange().getValues();
   var result = {};
 
@@ -164,7 +205,7 @@ function getGivers() {
     if (!row[0]) continue;
     result[row[0]] = {
       total: Number(row[1]) || 0,
-      last_buff: Number(row[2]) || 0
+      last_buff: Number(row[2]) || 0,
     };
   }
 
@@ -172,7 +213,7 @@ function getGivers() {
 }
 
 function addGiverStat(nick, ts) {
-  var sheet = getOrCreateSheet('Givers', ['nick', 'total', 'last_buff']);
+  var sheet = getOrCreateSheet("Givers", ["nick", "total", "last_buff"]);
   var data = sheet.getDataRange().getValues();
   var found = false;
 
@@ -193,7 +234,7 @@ function addGiverStat(nick, ts) {
 // === SHEET: Nicks ==========================================
 
 function getNicks() {
-  var sheet = getOrCreateSheet('Nicks', ['nick']);
+  var sheet = getOrCreateSheet("Nicks", ["nick"]);
   var data = sheet.getDataRange().getValues();
   var result = [];
 
@@ -208,7 +249,7 @@ function addNick(nick) {
   if (!nick) return;
   var nicks = getNicks();
   if (nicks.indexOf(nick) === -1) {
-    var sheet = getOrCreateSheet('Nicks', ['nick']);
+    var sheet = getOrCreateSheet("Nicks", ["nick"]);
     sheet.appendRow([nick]);
   }
 }
@@ -216,7 +257,7 @@ function addNick(nick) {
 // === SHEET: Template =======================================
 
 function getTemplate() {
-  var sheet = getOrCreateSheet('Template', ['key', 'value']);
+  var sheet = getOrCreateSheet("Template", ["key", "value"]);
   var data = sheet.getDataRange().getValues();
   var result = {};
 
@@ -229,12 +270,12 @@ function getTemplate() {
 }
 
 function setTemplate(template) {
-  var sheet = getOrCreateSheet('Template', ['key', 'value']);
+  var sheet = getOrCreateSheet("Template", ["key", "value"]);
   sheet.clearContents();
-  sheet.appendRow(['key', 'value']);
+  sheet.appendRow(["key", "value"]);
 
   var keys = Object.keys(template);
-  var rows = keys.map(function(key) {
+  var rows = keys.map(function (key) {
     return [key, template[key]];
   });
 
@@ -246,8 +287,9 @@ function setTemplate(template) {
 // === УТИЛИТЫ ===============================================
 
 function json(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(
+    ContentService.MimeType.JSON,
+  );
 }
 
 function getOrCreateSheet(name, titlesArr) {
@@ -267,5 +309,5 @@ function getOrCreateSheet(name, titlesArr) {
 
 function isSheetEmpty(sheet) {
   var data = sheet.getDataRange().getValues();
-  return data.join('') === '';
+  return data.join("") === "";
 }

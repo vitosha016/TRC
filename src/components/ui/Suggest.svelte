@@ -10,7 +10,9 @@
   let open = $state(false);
   let focusing = $state(-1);
   let matches = $derived(
-    searching ? items.filter(i => i.toLowerCase().includes(searching.toLowerCase())).slice(0, 10) : []
+    searching
+      ? items.filter(i => i.toLowerCase().includes(searching.toLowerCase())).slice(0, 10)
+      : items.slice(0, 10)
   );
 
   function pick(n) { value = n; open = false; focusing = -1; onpick?.(n); }
@@ -37,7 +39,7 @@
     ariaExpanded={open}
     ariaControls={open ? listId : ''}
     ariaActiveDescendant={open ? actId : ''}
-    onfocus={() => open = value.trim().length > 0}
+    onfocus={() => { if (items.length) open = true; }}
     oninput={() => { searching = value; open = true; focusing = -1; }}
     onkeydown={onKey}
     onblur={() => { setTimeout(() => open = false, 150); onsave?.(); }}

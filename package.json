@@ -8,10 +8,8 @@
     "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "oxlint --quiet",
-    "lint:fix": "oxlint --quiet --fix",
-    "format": "oxfmt",
-    "format:check": "oxfmt --check"
+    "lint": "oxlint --fix",
+    "format": "oxfmt"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.1.1",

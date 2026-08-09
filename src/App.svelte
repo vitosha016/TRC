@@ -3,7 +3,7 @@
   import { doLoad, nowSec, addNick, nickList } from './utils/stores.js';
   import BuffTable from './components/BuffTable.svelte';
   import AddForm from './components/AddForm.svelte';
-  import DonorsBar from './components/DonorsBar.svelte';
+  import GiverPanel from './components/GiverPanel.svelte';
   import LogList from './components/LogList.svelte';
   import SyncSpinner from './components/ui/SyncSpinner.svelte';
   import Button from './components/ui/Button.svelte';
@@ -44,12 +44,14 @@
     <Button variant="main" onclick={copy}>Копировать в чат</Button>
   </header>
 
-  <DonorsBar />
-  <LogList />
-
-  <AddForm bind:giverNick bind:editId onsavegiver={saveGiver} />
+  <div class="panel-row">
+    <AddForm bind:editId />
+    <GiverPanel bind:giverNick onsavegiver={saveGiver} />
+  </div>
 
   <BuffTable {giverNick} onedit={(id) => editId = id} />
+
+  <LogList />
 
   <SyncSpinner visible={$syncing > 0} />
 </div>
@@ -62,11 +64,19 @@
   }
   :global(*) { box-sizing: border-box; }
 
-  .wrap { max-width: 1440px; margin: 0 auto; padding: 20px 24px 80px; }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 20px 24px 32px; }
 
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .header h1 { font-size: 20px; font-weight: 700; margin: 0; }
   .sub { font-size: 12px; color: #86868b; margin-top: 2px; }
+
+  .panel-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;
+  }
+
+  @media (max-width: 800px) {
+    .panel-row { grid-template-columns: 1fr; }
+  }
 
   @media (max-width: 600px) {
     .wrap { padding: 12px 10px 80px; }

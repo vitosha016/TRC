@@ -5,6 +5,7 @@
   let isMain = $derived(variants.includes('main'));
   let isDanger = $derived(variants.includes('danger'));
   let isSmall = $derived(variants.includes('small'));
+  let isFull = $derived(variants.includes('full'));
 </script>
 
 <button
@@ -12,6 +13,7 @@
   class:main={isMain}
   class:danger={isDanger}
   class:small={isSmall}
+  class:full={isFull}
   {type}
   {disabled}
   {onclick}
@@ -44,4 +46,5 @@
   .danger:active { background: rgba(224,49,49,.2); transform: scale(.98); }
 
   .small { padding: 3px 7px; font-size: 11px; border-radius: 4px; }
+  .full { width: 100%; display: flex; }
 </style>
