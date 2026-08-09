@@ -5,10 +5,10 @@
   import AddForm from './components/AddForm.svelte';
   import DonorsBar from './components/DonorsBar.svelte';
   import LogList from './components/LogList.svelte';
-  import SyncSpinner from './components/SyncSpinner.svelte';
+  import SyncSpinner from './components/ui/SyncSpinner.svelte';
   import Button from './components/ui/Button.svelte';
   import { generateCopyText } from './lib/formulas.js';
-  import { buffs, history, template } from './lib/stores.js';
+  import { buffs, history, template, syncing } from './lib/stores.js';
 
   let giverNick = $state('');
 
@@ -50,7 +50,7 @@
 
   <BuffTable {giverNick} />
 
-  <SyncSpinner />
+  <SyncSpinner visible={$syncing > 0} />
 </div>
 
 <style>

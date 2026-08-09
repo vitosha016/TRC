@@ -1,8 +1,16 @@
 <script>
-  let { value = $bindable(), id = '', options = [], klass = '', children } = $props();
+  let {
+    value = $bindable(), label = '', placeholder = '',
+    id = '', options = [], klass = '', children
+  } = $props();
+
+  let cid = $derived(id || 's_' + Math.random().toString(36).slice(2, 8));
 </script>
 
-<select {id} bind:value class={klass}>
+{#if label}
+  <label for={cid}>{label}</label>
+{/if}
+<select id={cid} bind:value class={klass} aria-label={!label && placeholder ? placeholder : undefined}>
   {#if children}
     {@render children()}
   {:else}
@@ -13,6 +21,10 @@
 </select>
 
 <style>
+  label {
+    display: block; font-size: 11px; font-weight: 600; color: #86868b;
+    text-transform: uppercase; letter-spacing: .3px; margin-bottom: 3px;
+  }
   select {
     width: 100%; padding: 7px 8px; border: 1px solid #e0e0e4;
     background: #f5f5f7; color: #1d1d1f; font: inherit; font-size: 13px; border-radius: 6px;

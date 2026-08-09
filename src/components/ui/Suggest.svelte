@@ -1,7 +1,7 @@
 <script>
   import Input from './Input.svelte';
 
-  let { value = $bindable(), items = [], placeholder = '', id = '', onpick, onsave } = $props();
+  let { value = $bindable(), items = [], placeholder = '', label = '', id = '', onpick, onsave } = $props();
 
   let searching = $state('');
   let open = $state(false);
@@ -25,7 +25,7 @@
 <div class="wrap">
   <Input
     {id}
-    type="text"
+    {label}
     bind:value
     {placeholder}
     onfocus={() => open = value.trim().length > 0}
