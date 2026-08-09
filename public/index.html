@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TRC × FRC · Баффы</title>
+<style>
+  :root {
+    --bg: #f5f5f7;
+    --surface: #fff;
+    --border: #e0e0e4;
+    --text: #1d1d1f;
+    --muted: #86868b;
+    --fire: #e8590c; --fire-bg: #fff4e6;
+    --brand: #4263eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 16px 12px 80px; }
+
+  .head { margin-bottom: 14px; }
+  .head h1 { font-size: 18px; font-weight: 700; }
+  .head .sub { font-size: 12px; color: var(--muted); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px;
+    border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    transition: all .12s; white-space: nowrap;
+  }
+  .btn:hover { background: var(--border); }
+  .btn-main { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn-main:hover { opacity: .85; }
+  .btn-small { padding: 4px 8px; font-size: 11px; border-radius: 4px; }
+  .btn-danger { color: #e03131; border-color: transparent; }
+  .btn-danger:hover { background: rgba(224,49,49,.12); }
+
+  /* Top bar */
+  .topbar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .topbar input { flex: 1; min-width: 160px; padding: 7px 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-size: 13px; border-radius: 6px; }
+  .topbar input:focus { outline: none; border-color: var(--muted); }
+  .input-wrap { position: relative; flex: 1; min-width: 160px; }
+  .input-wrap input { width: 100%; }
+  .input-wrap .dropdown {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+    max-height: 180px; overflow-y: auto;
+  }
+  .input-wrap .dropdown.show { display: block; }
+  .input-wrap .dropdown .opt {
+    padding: 7px 10px; font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--border);
+  }
+  .input-wrap .dropdown .opt:hover { background: var(--border); }
+  .input-wrap .dropdown .opt:last-child { border-bottom: 0; }
+  .input-wrap .dropdown .opt strong { color: var(--text); }
+
+  /* Donors */
+  .donors { margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .donor-chip {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 10px; font-size: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .donor-chip .d-nick { font-weight: 600; }
+  .donor-chip .d-total { color: var(--muted); }
+  .donor-chip .d-cd { color: var(--fire); font-size: 11px; }
+  .donor-chip .d-ok { color: #2b8a3e; font-size: 11px; }
+
+  /* Log */
+  .log { margin-bottom: 16px; }
+  .log summary { font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; padding: 6px 0; user-select: none; }
+  .log table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .log th { text-align: left; padding: 4px 8px; color: var(--muted); font-size: 10px; font-weight: 600; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  .log td { padding: 4px 8px; border-bottom: 1px solid var(--border); }
+  .log .l-giver { font-weight: 600; }
+  .log .l-pct { color: var(--brand); font-weight: 600; }
+
+  /* Add form */
+  .add-form { background: var(--surface); border: 1px solid var(--border); padding: 14px; margin-bottom: 16px; }
+  .add-form .row { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+  .add-form .row > * { flex: 1; min-width: 80px; }
+  .add-form label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; display: block; margin-bottom: 3px; }
+  .add-form input, .add-form select { width: 100%; padding: 7px 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: 13px; border-radius: 6px; }
+  .add-form select { appearance: none; padding-right: 24px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; }
+
+  /* Queue table */
+  .section { margin-bottom: 24px; }
+  .section-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .section-title .cnt { font-size: 12px; color: var(--muted); font-weight: 400; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 6px 8px; color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; border-bottom: 2px solid var(--border); }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr.fire td { background: var(--fire-bg); }
+  tr.fire td:first-child { border-left: 3px solid var(--fire); }
+  td.rank { width: 28px; text-align: center; font-weight: 700; color: var(--muted); }
+  tr.fire td.rank { color: var(--fire); }
+  td.name { font-weight: 600; }
+  td.time { white-space: nowrap; }
+  td.saving { text-align: right; white-space: nowrap; font-weight: 600; }
+  td.pct { text-align: center; }
+  td.count { text-align: center; white-space: nowrap; font-size: 12px; color: var(--muted); }
+  td.bar-cell { width: 50px; }
+  td.act { text-align: right; white-space: nowrap; }
+  .bar-wrap { width: 100%; height: 3px; border-radius: 2px; background: var(--border); }
+  .bar-fill { height: 100%; border-radius: 2px; background: var(--muted); }
+  tr.fire .bar-fill { background: var(--fire); }
+
+  td.hist { font-size: 11px; color: var(--muted); max-width: 130px; }
+  td.hist .h-row { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  td.hist .h-giver { font-weight: 600; color: var(--text); }
+  td.hist .h-pct { color: var(--brand); font-weight: 600; }
+
+  .empty { text-align: center; padding: 24px; color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .add-form .row { flex-direction: column; }
+    .add-form .row > * { min-width: 100%; }
+    th, td { padding: 5px 4px; font-size: 11px; }
+    .btn-small { padding: 3px 6px; font-size: 10px; }
+    .donor-chip { font-size: 11px; padding: 4px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <h1>TRC × FRC · Баффы</h1>
+    <div class="sub">Управление очередью</div>
+  </div>
+
+  <div class="topbar">
+    <div class="input-wrap" id="giverWrap">
+      <input type="text" id="giverInput" placeholder="Кто раздаёт (ваш ник)" autocomplete="off" />
+      <div class="dropdown" id="giverDrop"></div>
+    </div>
+    <button class="btn btn-main" id="copyBtn">Копировать в чат</button>
+  </div>
+
+  <div class="donors" id="donorsBlock"></div>
+
+  <details class="log" id="logBlock">
+    <summary>История транзакций</summary>
+    <div id="logTable"></div>
+  </details>
+
+  <div class="add-form">
+    <form id="addForm" autocomplete="off">
+      <div class="row">
+        <div><label>Ник</label><div class="input-wrap" id="nickWrap">
+          <input id="buffNick" placeholder="Имя игрока" autocomplete="off" required />
+          <div class="dropdown" id="nickDrop"></div>
+        </div></div>
+        <div><label>Тип</label><select id="buffType"><option value="Стройка">Стройка</option><option value="Исследования">Исследования</option></select></div>
+        <div><label>Процент</label><input type="number" id="buffPercent" value="0" min="0" max="100" /></div>
+        <div><label>Дней</label><select id="buffDays"></select></div>
+        <div><label>Часов</label><select id="buffHours"></select></div>
+        <div style="display:flex;align-items:flex-end;"><input type="hidden" id="buffEditId" /><button class="btn btn-main" type="submit" id="buffSubmitBtn" style="width:100%">Добавить</button></div>
+      </div>
+    </form>
+  </div>
+
+  <div id="list"></div>
+
+</div>
+
+<script type="module">
+  const API=(p,o)=>fetch('/api'+p,o).then(r=>r.json()).catch(()=>({ok:false,error:'Сеть'}));
+  const ns=()=>Math.floor(Date.now()/1000);
+  const ls=(k,v)=>{if(v!==undefined)localStorage.setItem(k,v);return localStorage.getItem(k)||''};
+
+  let buffs=[],history=[],givers={},nickList=[];
+  const giverInput=document.getElementById('giverInput');
+  giverInput.value=ls('giver_nick');
+  giverInput.addEventListener('blur',()=>{ls('giver_nick',giverInput.value.trim());saveNick(giverInput.value.trim())});
+
+  for(let d=0;d<=60;d++)document.getElementById('buffDays').innerHTML+=`<option value="${d}">${d} дн.</option>`;
+  for(let h=0;h<=23;h++)document.getElementById('buffHours').innerHTML+=`<option value="${h}">${h} ч.</option>`;
+
+  function es(v){const d=document.createElement('div');d.textContent=v??'';return d.innerHTML}
+  function scoreBuff(e){
+    const left=Math.max(0,e.endAt-ns()),saving=Math.round(left*(e.buff||0)/100);
+    return{left,saving,score:Math.round(saving*(e.type==='Стройка'?1.1:1.05))}
+  }
+  function getFireIds(items){
+    const s=new Set();
+    ['Стройка','Исследования'].forEach(t=>{
+      const c=items.filter(i=>i.type===t),p=c.filter(i=>!i.queueReceived);
+      if(c.length-p.length>0&&p.length>0&&p.length<=2)p.forEach(i=>s.add(i.id))
+    });
+    return s
+  }
+  function fmt(s){
+    s=Math.max(0,Math.round(s));const d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60),sec=s%60;
+    const p=[];if(d)p.push(d+'д');if(h)p.push(h+'ч');if(m)p.push(m+'м');if(!d&&!h)p.push(sec+'с');
+    return p.join(' ')||'0с'
+  }
+
+  // Autocomplete dropdown
+  function setupDropdown(input,drop){
+    input.addEventListener('input',()=>{
+      const q=input.value.trim().toLowerCase();
+      if(!q){drop.classList.remove('show');return}
+      const matches=nickList.filter(n=>n.toLowerCase().includes(q)).slice(0,10);
+      if(!matches.length){drop.classList.remove('show');return}
+      drop.innerHTML=matches.map(n=>`<div class="opt"><strong>${es(n)}</strong></div>`).join('');
+      drop.querySelectorAll('.opt').forEach(o=>o.addEventListener('mousedown',e=>{e.preventDefault();input.value=o.textContent;drop.classList.remove('show');saveNick(input.value.trim())}));
+      drop.classList.add('show');
+    });
+    input.addEventListener('blur',()=>setTimeout(()=>drop.classList.remove('show'),150));
+    input.addEventListener('focus',()=>{if(input.value.trim())input.dispatchEvent(new Event('input'))});
+  }
+  setupDropdown(giverInput,document.getElementById('giverDrop'));
+  setupDropdown(document.getElementById('buffNick'),document.getElementById('nickDrop'));
+
+  async function saveNick(nick){
+    if(!nick||nickList.includes(nick))return;
+    nickList.push(nick);
+    await API('/buffs/nicks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nick})});
+  }
+  async function loadNicks(){
+    const d=await API('/buffs/nicks');
+    if(d.ok)nickList=d.nicks||[];
+  }
+
+  // Donors
+  function renderDonors(){
+    const arr=Object.entries(givers).map(([n,d])=>({
+      nick:n,total:Number(d.total||0),last:Number(d.last_buff||0)
+    })).sort((a,b)=>b.total-a.total||a.nick.localeCompare(a.nick,'ru'));
+    if(!arr.length){document.getElementById('donorsBlock').innerHTML='';return}
+
+    const now=ns(),cd=259200;
+    document.getElementById('donorsBlock').innerHTML=arr.slice(0,8).map((g,i)=>{
+      const left=Math.max(0,cd-(now-g.last));
+      const medal=['🥇','🥈','🥉'][i]||'🎖️';
+      return `<div class="donor-chip">
+        <span>${medal}</span>
+        <span class="d-nick">${es(g.nick)}</span>
+        <span class="d-total">${g.total} б.</span>
+        <span class="${left?'d-cd':'d-ok'}">${left?fmt(left):'готов'}</span>
+      </div>`
+    }).join('');
+  }
+
+  // Transaction log
+  function renderLog(){
+    const items=[...history].sort((a,b)=>b.time-a.time);
+    if(!items.length){document.getElementById('logTable').innerHTML='<div class="empty">Пока транзакций нет</div>';return}
+    document.getElementById('logTable').innerHTML='<table><tr><th>Время</th><th>От кого</th><th>Кому</th><th>Тип</th><th>%</th></tr>'+items.slice(0,50).map(h=>{
+      const d=new Date(h.time*1000);
+      const dt=d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',min:'2-digit'});
+      return`<tr>
+        <td style="white-space:nowrap;font-size:11px;color:var(--muted)">${dt}</td>
+        <td class="l-giver">${es(h.giver)}</td>
+        <td>${es(h.recipient)}</td>
+        <td style="font-size:11px;color:var(--muted)">${h.type}</td>
+        <td class="l-pct">${h.percent}%</td>
+      </tr>`
+    }).join('')+'</table>';
+  }
+
+  // Actions
+  function applyBuff(id,percent){
+    if(!confirm(`Подтвердить ускорение на ${percent}%?`))return;
+    const g=giverInput.value.trim();
+    API('/buffs/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,percent,giver:g})})
+      .then(d=>{if(d.ok){buffs=d.buffs||[];history=d.history||[];givers=d.givers||{};render()}else alert(d.error||'Ошибка')})
+      .catch(()=>alert('Сеть'));
+  }
+  function deleteEntry(id){
+    if(!confirm('Удалить?'))return;
+    API('/admin/buff/'+id,{method:'DELETE'}).then(d=>{if(d.ok){buffs=d.buffs||[];render()}else alert(d.error||'Ошибка')});
+  }
+
+  function render(){
+    renderDonors();renderLog();
+    const enr=buffs.map(b=>({...b,...scoreBuff(b)}));
+    const fireIds=getFireIds(enr);
+    const ranked=enr.map(b=>({...b,queueFire:fireIds.has(b.id)}))
+      .sort((a,b)=>Number(b.queueFire)-Number(a.queueFire)||b.score-a.score||b.left-a.left);
+
+    if(!ranked.length){document.getElementById('list').innerHTML='<div class="empty">Очередь пуста. Добавьте первого участника.</div>';return}
+
+    const maxScore=Math.max(1,...ranked.map(e=>e.score));
+    const icons={Стройка:'🪚',Исследования:'🔬'};
+
+    function tbl(type,label,icon){
+      const items=ranked.filter(e=>e.type===type);
+      if(!items.length)return'';
+      const rows=items.map((e,i)=>{
+        const w=Math.min(100,Math.max(5,e.score/maxScore*100));
+        const ap=e.appliedCount?` [${e.appliedCount}/14]`:'';
+        const histRows=(history||[]).filter(h=>
+          h.recipient_id===e.id||(h.type===e.type&&String(h.recipient||'').toLowerCase()===String(e.nick||'').toLowerCase())
+        ).sort((a,b)=>b.time-a.time).slice(0,5);
+        const histHtml=histRows.length
+          ?histRows.map(h=>`<div class="h-row"><span class="h-giver">${es(h.giver)}</span> → <span class="h-pct">${h.percent}%</span></div>`).join('')
+          :'<div class="h-row" style="color:var(--muted)">—</div>';
+
+        return`<tr class="${e.queueFire?'fire':''}">
+          <td class="rank">${e.queueFire?'!':i+1}</td>
+          <td class="name">${e.queueFire?'🔥 ':''}${es(e.nick)}</td>
+          <td style="font-size:12px;color:var(--muted)">${type}${ap} · ×${e.type==='Стройка'?'1.1':'1.05'}</td>
+          <td class="time">${fmt(e.left)}</td>
+          <td class="pct">${e.buff}%</td>
+          <td class="saving">${fmt(e.saving)}</td>
+          <td class="count">${e.applied}%<br>${e.appliedCount}/14</td>
+          <td class="bar-cell"><div class="bar-wrap"><div class="bar-fill" style="width:${w}%"></div></div></td>
+          <td class="hist">${histHtml}</td>
+          <td class="act">
+            ${[5,10,15].map(p=>`<button class="btn btn-small" onclick="window._apply('${e.id}',${p})">${p}%</button>`).join(' ')}
+            <button class="btn btn-small btn-danger" onclick="window._delete('${e.id}')">✕</button>
+          </td>
+        </tr>`
+      }).join('');
+      return`<div class="section"><div class="section-title">${icon} ${label} <span class="cnt">${items.length}</span></div><table>
+        <tr><th>#</th><th>Игрок</th><th>Тип · boost</th><th>Осталось</th><th>%</th><th>Экономия</th><th>Выдано</th><th></th><th>История</th><th></th></tr>
+        ${rows}</table></div>`
+    }
+    document.getElementById('list').innerHTML=tbl('Стройка','Стройка',icons['Стройка'])+tbl('Исследования','Исследования',icons['Исследования']);
+  }
+
+  window._apply=(id,pct)=>applyBuff(id,pct);
+  window._delete=(id)=>deleteEntry(id);
+
+  document.getElementById('copyBtn').onclick=async()=>{
+    const d=await API('/buffs/copy');
+    if(d.ok&&d.text){navigator.clipboard?await navigator.clipboard.writeText(d.text).then(()=>alert('Скопировано!')):prompt('',d.text)}
+  };
+
+  document.getElementById('addForm').onsubmit=async e=>{
+    e.preventDefault();
+    const id=document.getElementById('buffEditId').value;
+    const body={nick:document.getElementById('buffNick').value,type:document.getElementById('buffType').value,buff:+document.getElementById('buffPercent').value,days:+document.getElementById('buffDays').value,hours:+document.getElementById('buffHours').value,minutes:0};
+    if(id)body.buff_id=id;
+    const d=await API('/admin/buff',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(d.ok){buffs=d.buffs||[];document.getElementById('addForm').reset();document.getElementById('buffPercent').value=0;document.getElementById('buffEditId').value='';document.getElementById('buffSubmitBtn').textContent='Добавить';render()}else alert(d.error||'Ошибка');
+  };
+
+  async function load(){
+    await loadNicks();
+    const d=await API('/buffs');if(d.ok){buffs=d.buffs||[];history=d.history||[];
+      (d.buffs||[]).forEach(b=>{if(b.nick&&!nickList.includes(b.nick)){nickList.push(b.nick);saveNick(b.nick)}}) }
+    const g=await API('/buffs/givers');if(g.ok)givers=g.givers||{};
+    render();
+  }
+  load();setInterval(load,15000);setInterval(render,1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://trk-frc.ru/index.php?admin=1 -->
+<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Админка TRC × FRC</title>
+    <style>
+        *{box-sizing:border-box} body{margin:0;background:#0b0d14;color:#eef1f7;font:15px/1.45 Arial,sans-serif} a{color:#a78bfa} .wrap{width:min(1050px,calc(100% - 24px));margin:24px auto 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.top h1{margin:0;font-size:25px}.card{background:#141824;border:1px solid #293044;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 12px 35px rgba(0,0,0,.18)}.card h2{margin:0 0 14px;font-size:19px}.grid{display:grid;gap:12px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}label{display:grid;gap:6px;color:#aeb7ca;font-size:13px}input,textarea,select,button{width:100%;border:1px solid #343c52;border-radius:11px;background:#0e111a;color:#eef1f7;padding:11px;font:inherit}textarea{min-height:92px;resize:vertical}button,.btn{cursor:pointer;background:#7c3aed;border-color:#7c3aed;font-weight:700;text-decoration:none;text-align:center;display:inline-block}.secondary{background:#252b3a;border-color:#343c52}.danger{background:#7f1d1d;border-color:#991b1b}.muted{color:#939db2;font-size:13px}.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.item{border:1px solid #293044;border-radius:13px;padding:12px;margin-top:10px}.ok{padding:12px;border-radius:12px;background:#12351f;color:#86efac}.err{padding:12px;border-radius:12px;background:#451a1a;color:#fca5a5}.login{max-width:420px;margin:12vh auto}.thumb{max-width:180px;max-height:110px;border-radius:10px;display:block;margin:8px 0}@media(max-width:720px){.two,.three{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.row{flex-direction:column;align-items:stretch}}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="top">
+        <div><h1>⚙️ Админка TRC × FRC</h1></div>
+        <div class="row" style="flex:0 0 auto;">
+            <a class="btn secondary" href="https://trk-frc.ru/">Открыть сайт</a><a class="btn secondary" href="https://trk-frc.ru/index.php?buff_manage=1">Управление баффами</a>
+            <form method="post"><input type="hidden" name="action" value="logout"><button class="danger" type="submit">Выйти</button></form>
+        </div>
+    </div>
+
+
+    <section class="card">
+        <h2>📢 Оповещение на главной</h2>
+        <form method="post" enctype="multipart/form-data" class="grid">
+            <input type="hidden" name="action" value="save_note">
+            <div class="two grid">
+                <label>Плашка<input name="badge" value="Актуальное"></label>
+                <label>Дата<input name="updated" value="11.06.2026"></label>
+            </div>
+            <label>Заголовок<input name="title" value="Всем отличного настроения!"></label>
+            <label>Текст<textarea name="text">&lt;p&gt;Записываемся на резервуар, Вашей чести в личных сообщениях!&lt;/p&gt;</textarea></label>
+                        <label>Новая картинка<input type="file" name="note_image" accept="image/*"></label>
+            <label><span><input type="checkbox" name="remove_note_image" value="1" style="width:auto;"> удалить текущую картинку</span></label>
+            <button type="submit">Сохранить оповещение</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>🦁 Событие</h2>
+        <form method="post" class="grid">
+            <input type="hidden" name="action" value="save_event">
+            <div class="three grid">
+                <label>Название<input name="title" value="Лев"></label>
+                <label>Дата и время<input type="datetime-local" name="at" value="2026-05-14T14:25"></label>
+                <label>Напомнить за, минут<input type="number" min="0" name="before" value="15"></label>
+            </div>
+            <button type="submit">Сохранить событие</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>📋 Шаблон копирования баффов</h2>
+        <form method="post" class="grid">
+            <input type="hidden" name="action" value="save_template">
+            <div class="two grid">
+                <label>Заголовок стройки<textarea name="header_build">#184 Стройка | {date}
+</textarea></label>
+                <label>Заголовок исследований<textarea name="header_research">#173 Исследование
+</textarea></label>
+            </div>
+            <div class="two grid">
+                <label>Количество по стройке<input type="number" min="0" name="limit_build" value="15"></label>
+                <label>Количество по исследованиям<input type="number" min="0" name="limit_research" value="15"></label>
+            </div>
+            <label><span><input type="checkbox" name="include_5" value="1" style="width:auto;"> включать отдельную выдачу 5%</span></label>
+            <label>Заголовок блока 5%<textarea name="header_5">#186 Для ускорений стройки отдаём баффы 5%
+</textarea></label>
+            <button type="submit">Сохранить шаблон</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>🧮 Участники в очереди баффов</h2>
+                            <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785845204179310fo44ix">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="De Vito"></label>
+                        <label>Тип<select name="type"><option selected="">Стройка</option><option>Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="16"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="0"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="58"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785845204179310fo44ix"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b17858395318763u1raf7zhdw">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="Vi007"></label>
+                        <label>Тип<select name="type"><option>Стройка</option><option selected="">Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="4"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="21"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="24"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b17858395318763u1raf7zhdw"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785839461381vlguczljmc">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="Legion"></label>
+                        <label>Тип<select name="type"><option selected="">Стройка</option><option>Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="4"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="21"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="2"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785839461381vlguczljmc"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b17858225315711vr3punub2j">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="Nobody Anymore"></label>
+                        <label>Тип<select name="type"><option selected="">Стройка</option><option>Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="16"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="13"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="9"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b17858225315711vr3punub2j"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785822396076hucm3zwwz8f">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="Брюс Уэйн"></label>
+                        <label>Тип<select name="type"><option selected="">Стройка</option><option>Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="12"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="12"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="59"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785822396076hucm3zwwz8f"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b17857825501487uz7i6aulxx">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="Peace_death"></label>
+                        <label>Тип<select name="type"><option selected="">Стройка</option><option>Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="10"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="9"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="18"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b17857825501487uz7i6aulxx"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785743125722n647z0bncr9">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="Jeka"></label>
+                        <label>Тип<select name="type"><option>Стройка</option><option selected="">Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="5"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="12"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="29"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785743125722n647z0bncr9"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785702692212zqfo221hj6h">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="самбоо5"></label>
+                        <label>Тип<select name="type"><option>Стройка</option><option selected="">Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="4"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="4"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="10"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785702692212zqfo221hj6h"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785683548756epx2dh1g0m6">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="leaf"></label>
+                        <label>Тип<select name="type"><option>Стройка</option><option selected="">Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="8"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="4"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="40"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785683548756epx2dh1g0m6"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785492285761rs29tbpcky">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="Sinnervzm"></label>
+                        <label>Тип<select name="type"><option selected="">Стройка</option><option>Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="5"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="10"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="11"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785492285761rs29tbpcky"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785396213823r6xzrm6uvk">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="leaf"></label>
+                        <label>Тип<select name="type"><option selected="">Стройка</option><option>Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="5"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="5"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="28"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785396213823r6xzrm6uvk"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" class="grid">
+                    <input type="hidden" name="action" value="save_buff">
+                    <input type="hidden" name="buff_id" value="b1785383776822tccrglhuwzg">
+                    <div class="three grid">
+                        <label>Ник<input name="nick" value="Ваша честь"></label>
+                        <label>Тип<select name="type"><option>Стройка</option><option selected="">Исследования</option></select></label>
+                        <label>Процент<input type="number" name="buff" min="0" max="100" value="15"></label>
+                    </div>
+                    <div class="three grid">
+                        <label>Дней<input type="number" name="days" min="0" max="100" value="5"></label>
+                        <label>Часов<input type="number" name="hours" min="0" max="23" value="2"></label>
+                        <label>Минут<input type="number" name="minutes" min="0" max="59" value="39"></label>
+                    </div>
+                    <button type="submit">Сохранить участника</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить участника?&#39;)"><input type="hidden" name="action" value="delete_buff"><input type="hidden" name="buff_id" value="b1785383776822tccrglhuwzg"><button class="danger" type="submit">Удалить</button></form>
+            </div>
+            </section>
+
+    <section class="card">
+        <h2>💬 Цитаты после списка баффов</h2>
+        <form method="post" class="grid"><input type="hidden" name="action" value="add_quote"><textarea name="quote_text" placeholder="Новая фраза" required=""></textarea><button type="submit">Добавить цитату</button></form>
+        <form method="post" style="margin-top:8px;"><input type="hidden" name="action" value="reset_quotes"><button class="secondary" type="submit">Сбросить очередь использованных цитат</button></form>
+                    <div class="item row"><div>#000 У нас был план. Он даже красиво выглядел, пока не начался день.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q1"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Кто-то пришёл за ресурсами, кто-то за славой, а кто-то просто нажал не туда и стал героем.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q2"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Сегодня без паники. Паника у нас по расписанию после вечернего сбора.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q3"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо тем, кто делает молча. Вы пугаете сильнее, чем те, кто пишет “я всех вынесу”.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q4"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Союз — это когда ты хотел спокойно поиграть, а теперь у тебя ответственность, будильники и чувство вины.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q5"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Главное правило выживания: сначала прочитай чат, потом уже совершай подвиг.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q6"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Иногда кажется, что заражённые нападают не на базу, а лично на наше терпение.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q7"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Не обязательно быть самым сильным. Иногда достаточно быть тем, кто не пропал в нужный момент.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q8"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Мы играем не хаотично. Просто наша стратегия слишком авангардная для обычных людей.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q9"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 У каждого союза есть легенды. У нас легенды начинаются со слов: “А помните, как он поставил…”</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q10"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо за вклад. Союз заметил. Лидер выдохнул. База пока жива.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q11"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Утром были планы. К вечеру остались скриншоты, вопросы и один человек с фразой “я предупреждал”.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q12"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Побеждает не тот, кто первый ударил, а тот, кто после этого ещё остался онлайн.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q13"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Осторожность — это когда ты уже почти нажал, но внезапно вспомнил, что у тебя есть мозг.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q14"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 В игре есть три состояния: строим, горим, делаем вид, что контролируем ситуацию.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q15"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Отдельное спасибо тем, кто пришёл без напоминаний. Вы редкий вид, вас надо беречь.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q16"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Иногда один лишний клик рождает целую главу в истории союза.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q17"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Сила не в том, чтобы не падать. Сила в том, чтобы после падения спросить: “Куда теперь?”</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q18"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Наша база держится на ресурсах, терпении и людях, которые почему-то всё ещё с нами.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q19"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Когда лидер пишет спокойно — это ещё не значит, что внутри него не идёт финальная битва.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q20"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Хороший игрок виден не по словам, а по тому, что после него стало легче.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q21"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Нефть, вышки, рейды, бафы… А ведь кто-то заходил “просто расслабиться”.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q22"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Иногда самый полезный игрок — тот, кто ничего не сломал. Уже победа.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q23"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо за актив. Даже маленькое действие лучше большого “я потом”.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q24"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Союзный чат — место, где рождаются планы, шутки и лёгкое недоверие к человечеству.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q25"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Не ищи идеальный момент. В этой игре он обычно уже горит.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q26"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 База — как настроение лидера: вроде стоит, но лучше лишний раз не трогать.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q27"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Если кто-то написал “я понял”, это ещё не гарантия. Это начало интриги.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q28"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо тем, кто держит линию. Даже если линия иногда похожа на каракули.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q29"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Сегодняшняя тактика: аккуратно, уверенно и желательно без фразы “ой”.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q30"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Настоящий вклад — это когда тебя не просили, а ты уже сделал.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q31"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Враг приходит за победой. Уходит с вопросом: “Что это вообще было?”</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q32"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Самые страшные слова в союзе: “Я там чуть-чуть поменял”.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q33"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо всем, кто не ждёт идеальных условий. Их всё равно никто не завёз.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q34"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Команда — это когда устал один, но рядом уже кто-то тащит дальше.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q35"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Наша дипломатия проста: сначала улыбаемся, потом смотрим на карту.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q36"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Не каждый день должен быть великим. Некоторые дни достаточно просто не провалить.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q37"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Вышка стояла спокойно, пока кто-то не решил проявить инициативу.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q38"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Победа начинается не с атаки. Победа начинается с тех, кто вообще пришёл.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q39"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо за терпение. Это редкий ресурс, который нельзя купить в магазине.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q40"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Если в чате много смеха — значит, либо всё хорошо, либо уже поздно.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q41"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Умный игрок бережёт войска. Мудрый игрок ещё и нервы лидера.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q42"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Каждый день — шанс стать полезнее, сильнее и чуть менее хаотичным.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q43"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Мы не спорим с судьбой. Мы просто открываем карту и делаем ей больно.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q44"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо тем, кто помогает без громких речей. Такие люди держат союз лучше любых лозунгов.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q45"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Иногда лучшее решение — не героическое, а своевременное.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q46"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Хотели спокойный вечер. Получили нефть, рейд, резервуар и философский кризис.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q47"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Стабильность — это когда тебя можно позвать, и ты не исчезаешь в туман.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q48"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Не надо быть легендой каждый день. Иногда достаточно быть онлайн.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q49"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 У каждого союза есть стратегия. У нас ещё есть импровизация, мемы и лёгкая угроза хаоса.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q50"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо всем, кто делает игру живой. Без вас это была бы просто карта с кнопками.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q51"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Маленькие действия незаметны по одному, но именно из них потом получается победа.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q52"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 На словах всё было просто. Потом кто-то открыл событие.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q53"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Если ты сегодня никого не подвёл — уже можешь считать день успешным.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q54"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Союз держится не на идеальных игроках, а на тех, кто возвращается после ошибок.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q55"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Иногда враг страшный. Иногда страшнее союзник с энтузиазмом.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q56"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Побеждать приятно. Но особенно приятно, когда после победы никто не спрашивает “а что делать дальше?”</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q57"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Хорошая атака — это когда потом не нужно писать длинное объяснение.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q58"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 У нас всё под контролем. Просто контроль бегает по карте и кричит.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q59"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо тем, кто не делает вид, что “не видел сообщение”. Вы элита.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q60"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Дисциплина — скучное слово, пока она не приносит победу.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q61"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 В этой игре даже “на пять минут” умеет превращаться в полноценную смену.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q62"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Иногда надо не сильнее бить, а точнее понимать, зачем.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q63"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо каждому, кто сегодня добавил союзу не проблем, а пользы.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q64"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 У нас не баги в стратегии. У нас авторский стиль ведения войны.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q65"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Победа не обязана быть красивой. Главное, чтобы она была нашей.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q66"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Когда все устали, особенно ценен тот, кто всё равно нажал нужную кнопку.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q67"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Если ты понял задачу с первого раза — не пугай союз, так редко бывает.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q68"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо за спокойствие. В моменты хаоса оно дороже ресурсов.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q69"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#078 Игрок становится сильнее не после апа, а после первой нормальной командной задачи.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q70"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#000 Мы не ищем лёгких путей. Они сами от нас убегают.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q71"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#084 Главное — не кто начал движ, а кто потом помог его вытащить.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q72"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>#186 Спасибо тем, кто держится до конца. Финал любят именно такие.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q73"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>Новый сезон — новая забота: как бы дракона покормить и самому не остаться голодным.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q1783313854400"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>Главный вопрос сезона: кто кого будит? Мы дракона — или он нас своим аппетитом?</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q1783313893824"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item row"><div>Пока дракон спал — мы жили спокойно. Проснулся — и пошли собирать ему полакомиться по всем плиткам.</div><form method="post" style="flex:0 0 130px;"><input type="hidden" name="action" value="delete_quote"><input type="hidden" name="quote_id" value="q1783313954911"><button class="danger" type="submit">Удалить</button></form></div>
+            </section>
+
+    <section class="card">
+        <h2>💌 Модерация обращений</h2>
+                            <div class="item"><b>Ваша честь</b> · Валентинка<p>Го на свидание в Аркадию 😘</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1785850477416"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item"><b>Союз</b> · Валентинка<p>Я вас всех очень лю❤️❤️</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1785850084951"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item"><b>Kat</b> · Вопрос<p>а ты правда кошка?</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1783419365575"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item"><b>Libertas</b> · Комплимент<p>На самом деле я не обижаю, а собираю коллекцию его эмоций. Обиженный Libertas — это редкий экспонат, но я его берегу и никому не показываю 😉</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1782838496103"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item"><b>Vi007</b> · Вопрос<p>Напиши в чате - почему ты обижаешь Libertas'а?</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1782666338253"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item"><b>Libertas</b> · Валентинка<p>Я твоя фанатка, обожаюю тебя!😍</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1782658629732"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item"><b>Брюс Уэйн</b> · Поддержка<p>Подскажите, а как летать как вы?!</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1782658222973"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item"><b>Ваша честь</b> · Вопрос<p>Как ты это всё терпишь?!!!</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1782658201304"><button class="danger" type="submit">Удалить</button></form></div>
+                    <div class="item"><b>Мимо</b> · Комплимент<p>Милая моя, спасибо тебе что появилась в моей жизни!</p><form method="post" onsubmit="return confirm(&#39;Удалить сообщение?&#39;)"><input type="hidden" name="action" value="delete_valentine"><input type="hidden" name="valentine_id" value="v1782658160704"><button class="danger" type="submit">Удалить</button></form></div>
+            </section>
+
+    <section class="card">
+        <h2>📰 Создать статью</h2>
+        <form method="post" enctype="multipart/form-data" class="grid">
+            <input type="hidden" name="action" value="create_article">
+            <div class="three grid"><label>Категория<input name="category" value="Общее"></label><label>Код<input name="code"></label><label>Заголовок<input name="title" required=""></label></div>
+            <label>Краткое описание<textarea name="summary"></textarea></label>
+            <label>Текст статьи<textarea name="body" style="min-height:180px;"></textarea></label>
+            <label>Картинка<input type="file" name="image" accept="image/*"></label>
+            <button type="submit">Создать статью</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>🗂️ Существующие статьи</h2>
+                            <div class="item">
+                <form method="post" enctype="multipart/form-data" class="grid">
+                    <input type="hidden" name="action" value="update_article"><input type="hidden" name="article_id" value="a1780319525778">
+                    <div class="three grid"><label>Категория<input name="category" value="Интервью"></label><label>Код<input name="code" value="#000"></label><label>Заголовок<input name="title" value="Спецвыпуск союза ТРК · интервью"></label></div>
+                    <label>Краткое описание<textarea name="summary">Наш большой разговор с Настей (Ваша честь) наконец-то готов и уже совсем скоро будет залит на сайт.</textarea></label>
+                    <label>Текст<textarea name="body" style="min-height:150px;">&lt;p&gt;Знаете, мы привыкли видеть её в чате: строгую, с правилами, иногда ругающуюся (за дело!). Но в этом интервью она открылась совсем с другой стороны. Там столько тепла, столько переживаний за каждого из нас и столько искренней гордости за ТРК. Спойлер: она призналась, что не представляет игру без вас и ни за какие миллионы не променяет наших игроков.&lt;br&gt;&lt;br&gt;Закупайтесь вкусняшками, устраивайтесь поудобнее и ждите этим вечером! Там очень много смешного, очень много честного и... ну, без мата тоже не обошлось.&lt;/p&gt;</textarea></label>
+                    <img class="thumb" src="./Админка TRC × FRC_files/a1780319525778_1780319525_577.jpg" alt="">                    <label>Новая картинка<input type="file" name="image" accept="image/*"></label>
+                    <label><span><input type="checkbox" name="remove_image" value="1" style="width:auto;"> удалить картинку</span></label>
+                    <button type="submit">Сохранить статью</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить статью?&#39;)"><input type="hidden" name="action" value="delete_article"><input type="hidden" name="article_id" value="a1780319525778"><button class="danger" type="submit">Удалить статью</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" enctype="multipart/form-data" class="grid">
+                    <input type="hidden" name="action" value="update_article"><input type="hidden" name="article_id" value="a1779361557666">
+                    <div class="three grid"><label>Категория<input name="category" value="Первые шаги"></label><label>Код<input name="code" value="#001"></label><label>Заголовок<input name="title" value="🎁 Промокоды: как порвать топы ничего не делая?"></label></div>
+                    <label>Краткое описание<textarea name="summary">Это секретный набор букв и&nbsp;цифр, который мы&nbsp;вводим в&nbsp;специальное окошко, и&nbsp;получаем награды. Обычно они дают ресурсы, ускорители, алмазы или предметы для героев.</textarea></label>
+                    <label>Текст<textarea name="body" style="min-height:150px;">&lt;p&gt;🎁 Промокоды: как порвать топы ничего не делая?! Читай! Это твоё спасение!&lt;br&gt;&lt;br&gt;Разработчики игры регулярно радуют нас небольшими, но приятными подарками. Практически на любой крупный праздник (День Матери, 14 февраля, Новый год, Хэллоуин) или в честь выхода крупных обновлений в сети появляются&amp;nbsp;&lt;strong&gt;специальные промокоды&lt;/strong&gt;.&lt;br&gt;&lt;br&gt;Это секретный набор, который если ввести в специальную форму, вы получите награды. Обычно они дают ресурсы, ускорители, алмазы или предметы для героев. Награды не сделают вас миллионером за секунду, но в развитии базы лишними точно не будут!&lt;br&gt;&lt;br&gt;&lt;strong&gt;⚙️ Как ввести промокод и забрать награду?&lt;/strong&gt;&lt;br&gt;Активировать код очень просто. Выполните эти 4 шага:&lt;br&gt;- На главном экране игры нажмите на свой&amp;nbsp;&lt;strong&gt;Аватар&lt;/strong&gt;&amp;nbsp;(в левом верхнем углу).&lt;br&gt;- В открывшемся меню перейдите в&amp;nbsp;&lt;strong&gt;&amp;laquo;Настройки&amp;raquo;&lt;/strong&gt;&amp;nbsp;(иконка шестеренки).&lt;br&gt;- Найдите и нажмите кнопку&amp;nbsp;&lt;strong&gt;&amp;laquo;Подарочный код&amp;raquo;&lt;/strong&gt;.&lt;br&gt;- Введите промокод в поле и нажмите подтверждение.&lt;br&gt;📩&amp;nbsp;&lt;strong&gt;Важно:&lt;/strong&gt;&amp;nbsp;Награды не добавляются в рюкзак автоматически! После ввода кода откройте&amp;nbsp;&lt;strong&gt;внутриигровую Почту&lt;/strong&gt;&amp;nbsp;&amp;mdash; посылка от системы уже будет ждать вас там.&lt;br&gt;&lt;br&gt;&lt;strong&gt;🔎 Где искать новые промокоды?&lt;/strong&gt;&lt;br&gt;Коды имеют ограниченный срок действия (иногда всего пару дней), поэтому важно успевать их активировать. Вот где они появляются:&lt;br&gt;&lt;strong&gt;Внутри игры:&lt;/strong&gt;&amp;nbsp;проверяйте вкладку &amp;laquo;Новости&amp;raquo; на главной панели.&lt;br&gt;&lt;strong&gt;В соцсетях игры:&lt;/strong&gt;&amp;nbsp;нажмите на значок Telegram в самом верху экрана игры &amp;mdash; он переведет вас на официальный канал разработчиков, где часто публикуют подарки.&lt;br&gt;&lt;br&gt;🤝&amp;nbsp;&lt;strong&gt;Правило хорошего тона в союзе ТРК:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;Нашел или увидел где-то новый рабочий промокод? Не жадничай &amp;mdash; скинь его в общий чат союза! Так мы все будем развиваться чуточку быстрее.&lt;/blockquote&gt;
+&lt;p&gt;&lt;br&gt;&lt;strong&gt;🔥 Актуальные промокоды (Обновляется поэтому занеси в закладки)&lt;/strong&gt;&lt;br&gt;Здесь мы собираем рабочие коды. Просто скопируйте нужный код и введите его в игре:&lt;/p&gt;</textarea></label>
+                    <img class="thumb" src="./Админка TRC × FRC_files/a1779361557666_1779362438_866.png" alt="">                    <label>Новая картинка<input type="file" name="image" accept="image/*"></label>
+                    <label><span><input type="checkbox" name="remove_image" value="1" style="width:auto;"> удалить картинку</span></label>
+                    <button type="submit">Сохранить статью</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить статью?&#39;)"><input type="hidden" name="action" value="delete_article"><input type="hidden" name="article_id" value="a1779361557666"><button class="danger" type="submit">Удалить статью</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" enctype="multipart/form-data" class="grid">
+                    <input type="hidden" name="action" value="update_article"><input type="hidden" name="article_id" value="a1779363946957">
+                    <div class="three grid"><label>Категория<input name="category" value="Новичкам"></label><label>Код<input name="code" value="#001"></label><label>Заголовок<input name="title" value="Правила штата "></label></div>
+                    <label>Краткое описание<textarea name="summary">Помимо нашего Союза в штате есть и другие, поэтому есть правила, которые помогают нам всем максимально мирно сосуществовать и наслаждаться игрой👇🏻</textarea></label>
+                    <label>Текст<textarea name="body" style="min-height:150px;">&lt;p&gt;&lt;strong&gt;Приветствуем всех в нашем Союзе! 👋&lt;/strong&gt;&lt;br&gt;&lt;br&gt;Мы &amp;mdash; максимально дружелюбный коллектив. Наш приоритет &amp;mdash; личные достижения, спокойное развитие и прокачка электростанции до 30-го уровня. Мы ни к кому не лезем и ни с кем не воюем первыми. Но если кто-то решит напасть на нас &amp;mdash; мы дадим жесткий отпор и покажем, кто здесь босс, но не тот что молокосос xD. 🛡&lt;br&gt;&lt;br&gt;Чтобы мы могли спокойно играть и не ввязываться в ненужные войны со всем штатом, мы обязаны соблюдать&amp;nbsp;&lt;strong&gt;Правила нашего Штата&lt;/strong&gt;. Пожалуйста, прочитайте их внимательно:&lt;br&gt;&lt;br&gt;✅&amp;nbsp;&lt;strong&gt;Что РАЗРЕШЕНО:&lt;/strong&gt;&lt;br&gt;&amp;mdash; Атаковать игроков своего штата на Арене.&lt;br&gt;&amp;mdash; Атаковать рудники (с пониманием, что вам могут отомстить через кнопку &amp;laquo;Месть&amp;raquo;).&lt;br&gt;&amp;mdash; Вместе со всем штатом защищать от вторжения других штатов.&lt;br&gt;&lt;br&gt;🚨&amp;nbsp;&lt;strong&gt;Что СТРОГО ЗАПРЕЩЕНО:&lt;/strong&gt;&lt;br&gt;&amp;mdash;&amp;nbsp;&lt;strong&gt;Жечь чужие базы (поселения)&lt;/strong&gt;&amp;nbsp;игроков, состоящих в других союзах.&lt;br&gt;&amp;mdash;&amp;nbsp;&lt;strong&gt;Атаковать чужие сборы ресурсов&lt;/strong&gt;&amp;nbsp;на карте (плитки).&lt;br&gt;&amp;mdash;&amp;nbsp;&lt;strong&gt;Атаковать Логово&lt;/strong&gt;&amp;nbsp;другого союза.&lt;br&gt;&amp;mdash;&amp;nbsp;&lt;strong&gt;Грабить грузовики нашего штата.&lt;/strong&gt;&amp;nbsp;Обязательно зайдите в настройки грузовиков и поставьте галочку &amp;laquo;Искл. игроков своего штата&amp;raquo;!&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;💅🏻Мини-советы:&lt;/strong&gt;&lt;br&gt;&amp;mdash; Атаковать Отчаянные отправки игроков из других союзов, но очень аккуратно, чтобы не спалили. В целом, такая практика не рекомендуется.&lt;br&gt;&amp;mdash; По субботам, во время VS, у нас чаще всего перемирие с другим штатом, в такие дни нападать на чужой штат запрещено, даже если игра просит это делать.&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;💬&lt;strong&gt; Общение, конфликты и набор:&lt;/strong&gt;&lt;br&gt;&amp;mdash; &lt;strong&gt;Чат:&lt;/strong&gt; Давайте относиться друг к другу с любовью. Никаких оскорблений и провокаций. Если назревает конфликт или вы чувствуете, что эмоции берут верх &amp;mdash; прервите диалог, выдохните и вернитесь позже.&lt;br&gt;&amp;mdash; &lt;strong&gt;Набор:&lt;/strong&gt; Переманивать игроков из других союзов запрещено. Но если вы нашли свободного игрока без союза &amp;mdash; мы будем рады принять его в наши ряды!&lt;br&gt;&amp;mdash; &lt;strong&gt;Решение проблем:&lt;/strong&gt; Любые спорные ситуации, конфликты с другими союзами или крупные решения принимаются &lt;strong&gt;ТОЛЬКО &lt;/strong&gt;через руководство (глава и дипломаты / R4-R5). Никакой самодеятельности.&lt;br&gt;&lt;br&gt;😈&amp;nbsp;&lt;strong&gt;Штрафы за нарушения:&lt;/strong&gt;&lt;br&gt;Законы штата суровы: за первое нарушение &amp;mdash; предупреждение, за повторное &amp;mdash; понижение ранга, за систематические нарушения &amp;mdash; изгнание из союза без права возврата. Не подставляйте себя и товарищей.&lt;br&gt;Мы всех любим, обнимаем и надеемся на отличную игру, которая будет приносить только удовольствие! ❤️&lt;br&gt;&lt;br&gt;Если правила понятны и вы с ними согласны &amp;mdash;&amp;nbsp;&lt;strong&gt;поставьте реакцию &amp;laquo;палец вверх&amp;raquo;&lt;/strong&gt; под этим сообщением (это проверка на то, что вы дочитали текст до конца 😉). Если есть вопросы &amp;mdash; пишите, всё объясним!&lt;/p&gt;</textarea></label>
+                                        <label>Новая картинка<input type="file" name="image" accept="image/*"></label>
+                    <label><span><input type="checkbox" name="remove_image" value="1" style="width:auto;"> удалить картинку</span></label>
+                    <button type="submit">Сохранить статью</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить статью?&#39;)"><input type="hidden" name="action" value="delete_article"><input type="hidden" name="article_id" value="a1779363946957"><button class="danger" type="submit">Удалить статью</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" enctype="multipart/form-data" class="grid">
+                    <input type="hidden" name="action" value="update_article"><input type="hidden" name="article_id" value="a1779368083162">
+                    <div class="three grid"><label>Категория<input name="category" value="Вредные советы от Стюарта"></label><label>Код<input name="code" value="7771"></label><label>Заголовок<input name="title" value="😈 Вредные советы от Стюарта: Отчаянные отправки"></label></div>
+                    <label>Краткое описание<textarea name="summary">Всем привет! С вами рубрика «Вредные советы от Стюарта» и сегодня я хочу поделиться с вами парочкой тех, следовать которым, казалось бы, не очень «правильно» с точки зрения... морали... но пользы вашему аккаунту они принесут куда больше, чем вреда 😉 Поехали!</textarea></label>
+                    <label>Текст<textarea name="body" style="min-height:150px;">&lt;p&gt;&lt;strong&gt;📦 Вредный совет № 1: Как стать богатым на &amp;laquo;Отчаянных отправках&amp;raquo;&lt;/strong&gt;&lt;br&gt;Вы все знаете, как работают отправки в союзах: игрок отправляет груз, и если он доезжает до точки (например, за 4 часа), игрок получает награду. Если не успел и его ограбили &amp;mdash; увы и ах. Зайдя на территорию любого крупного союза, вы увидите россыпь цветных точек: синие, фиолетовые, оранжевые.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Что нужно делать:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Самые &amp;laquo;сладкие&amp;raquo; грузы &amp;mdash; это отправки 5-го уровня (оранжевые). В них лежат фрагменты героев, самоцветы, дерево и куча других вкусностей.&lt;/li&gt;
+&lt;li&gt;Ставим маркер (закладку) на карте прямо на базу самого топового союза нашего штата (пальцем показывать не будем 🤫).&lt;/li&gt;
+&lt;li&gt;Каждое утро начинаем с того, что заходим по этой закладке и просто собираем &amp;laquo;дань&amp;raquo; &amp;mdash; грабим эти жирные оранжевые отправки 😈&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Итог: Если заниматься этим хулиганством каждый день, вы накопите весьма солидный капитал из воздуха💰&lt;/p&gt;</textarea></label>
+                                        <label>Новая картинка<input type="file" name="image" accept="image/*"></label>
+                    <label><span><input type="checkbox" name="remove_image" value="1" style="width:auto;"> удалить картинку</span></label>
+                    <button type="submit">Сохранить статью</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить статью?&#39;)"><input type="hidden" name="action" value="delete_article"><input type="hidden" name="article_id" value="a1779368083162"><button class="danger" type="submit">Удалить статью</button></form>
+            </div>
+                    <div class="item">
+                <form method="post" enctype="multipart/form-data" class="grid">
+                    <input type="hidden" name="action" value="update_article"><input type="hidden" name="article_id" value="a1779369488686">
+                    <div class="three grid"><label>Категория<input name="category" value="Вредные советы от Стюарта"></label><label>Код<input name="code" value="7772"></label><label>Заголовок<input name="title" value="😈 Вредные советы от Стюарта: Арена"></label></div>
+                    <label>Краткое описание<textarea name="summary">С&nbsp;вами снова ваш покорный (а, может, и не очень) Стюарт и&nbsp;сейчас я&nbsp;быстренько расскажу, как стать блестящей звёздочкой на&nbsp;ночном небе Арены🌟 Погнали!</textarea></label>
+                    <label>Текст<textarea name="body" style="min-height:150px;">&lt;p&gt;&lt;strong&gt;🏆 Вредный совет № 2: Как пролезть в топ Арены по спящим телам (Путь Тактика)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Вы все знаете, как работает Арена: итоги подводятся в самом конце дня, прямо перед обновлением сервера. Вы можете честно зайти днём, раскидать соперников, получить очки и занять высокие строчки. Но есть проблема: к вечеру ваши попытки закончатся, а новые (или более хитрые, как например, ваш &lt;span style="color: rgb(186, 55, 42);"&gt;&lt;em&gt;не&lt;/em&gt;&lt;/span&gt;покорный Стюарт😉) игроки зайдут и сбросят вас вниз.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Что нужно делать:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Чтобы собрать самые жирные сливки и лучшие рейтинги, действовать нужно прямо перед сбросом сервера &amp;mdash; желательно за 10&amp;ndash;20 минут до обновления.&lt;/li&gt;
+&lt;li&gt;Да, к сожалению для многих, часовой пояс тут крайне неудобный &amp;mdash; это 02:40 или 02:50 ночи по Московскому времени. Но такова суровая реальность, ради наград приходится чем-то жертвовать💔&lt;/li&gt;
+&lt;li&gt;В это время вы заходите на Арену и начинаете точечно атаковать игроков, которые находятся в рейтинге выше вас.&lt;/li&gt;
+&lt;li&gt;Не бойтесь экспериментировать! Вы можете смело пробовать пробивать сильных соперников: в боях один-на-один &lt;strong&gt;ваша попытка Арены не сгорает&lt;/strong&gt;, так что вы ничем не рискуете.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;br&gt;Итог: Вы запрыгиваете на самые топовые позиции, забираете максимальные награды за день, а у ваших конкурентов просто не остается времени (а может и попыток), чтобы скинуть вас обратно до обновления сервера! Шах и мат.&lt;/p&gt;</textarea></label>
+                                        <label>Новая картинка<input type="file" name="image" accept="image/*"></label>
+                    <label><span><input type="checkbox" name="remove_image" value="1" style="width:auto;"> удалить картинку</span></label>
+                    <button type="submit">Сохранить статью</button>
+                </form>
+                <form method="post" style="margin-top:8px;" onsubmit="return confirm(&#39;Удалить статью?&#39;)"><input type="hidden" name="action" value="delete_article"><input type="hidden" name="article_id" value="a1779369488686"><button class="danger" type="submit">Удалить статью</button></form>
+            </div>
+            </section>
+</div>
+
+
+</body></html>
