@@ -9,7 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "types": ["@cloudflare/workers-types"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
