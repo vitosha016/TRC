@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { doLoad, nowSec } from './lib/stores.js';
+  import { doLoad, nowSec, addNick, nickList } from './lib/stores.js';
   import BuffTable from './components/BuffTable.svelte';
   import AddForm from './components/AddForm.svelte';
   import DonorsBar from './components/DonorsBar.svelte';
@@ -10,21 +10,22 @@
   import { buffs, history, template } from './lib/stores.js';
 
   let giverNick = $state('');
-  let giverSaved = '';
+
+  let giverSearch = $state('');
+  let giverDrop = $state(false);
+  let giverMatches = $derived(
+    giverSearch ? $nickList.filter(n => n.toLowerCase().includes(giverSearch.toLowerCase())).slice(0, 8) : []
+  );
+
+  function pickGiver(n) { giverNick = n; giverDrop = false; saveGiver(); }
+  function saveGiver() { const v = giverNick.trim(); localStorage.setItem('giver_nick', v); if (v) addNick(v); }
 
   onMount(() => {
     giverNick = localStorage.getItem('giver_nick') || '';
-    giverSaved = giverNick;
     doLoad();
     const loadTimer = setInterval(doLoad, 15_000);
     return () => clearInterval(loadTimer);
   });
-
-  function saveGiver() {
-    const v = giverNick.trim();
-    localStorage.setItem('giver_nick', v);
-    giverSaved = v;
-  }
 
   async function copy() {
     let b, h, t;
@@ -46,13 +47,24 @@
   </div>
 
   <div class="topbar">
-    <input
-      type="text"
-      placeholder="Кто раздаёт (ваш ник)"
-      autocomplete="off"
-      bind:value={giverNick}
-      onblur={saveGiver}
-    />
+    <div class="input-wrap">
+      <input
+        type="text"
+        placeholder="Кто раздаёт (ваш ник)"
+        autocomplete="off"
+        bind:value={giverNick}
+        onfocus={() => giverDrop = giverNick.trim().length > 0}
+        oninput={() => { giverSearch = giverNick; giverDrop = true; }}
+        onblur={() => { setTimeout(() => giverDrop = false, 150); saveGiver(); }}
+      />
+      {#if giverDrop && giverMatches.length}
+        <div class="dropdown show">
+          {#each giverMatches as n}
+            <div class="opt" role="button" tabindex="0" onmousedown={(e) => { e.preventDefault(); pickGiver(n); }}>{n}</div>
+          {/each}
+        </div>
+      {/if}
+    </div>
     <button class="btn btn-main" onclick={copy}>Копировать в чат</button>
   </div>
 
@@ -78,8 +90,19 @@
   .head .sub { font-size: 12px; color: #86868b; }
 
   .topbar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-  .topbar input { flex: 1; min-width: 160px; padding: 7px 10px; border: 1px solid #e0e0e4; background: #fff; color: #1d1d1f; font: inherit; font-size: 13px; border-radius: 6px; }
-  .topbar input:focus { outline: none; border-color: #86868b; }
+  .input-wrap { position: relative; flex: 1; min-width: 160px; }
+  .input-wrap input { width: 100%; padding: 7px 10px; border: 1px solid #e0e0e4; background: #fff; color: #1d1d1f; font: inherit; font-size: 13px; border-radius: 6px; }
+  .input-wrap input:focus { outline: none; border-color: #86868b; }
+
+  .dropdown {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+    background: #fff; border: 1px solid #e0e0e4; border-radius: 6px;
+    max-height: 180px; overflow-y: auto;
+  }
+  .dropdown.show { display: block; }
+  .opt { padding: 7px 10px; font-size: 13px; cursor: pointer; border-bottom: 1px solid #e0e0e4; }
+  .opt:hover { background: #e0e0e4; }
+  .opt:last-child { border-bottom: 0; }
 
   .btn {
     display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px;
