@@ -25,7 +25,9 @@ export function makeId() {
 export function scoreBuff(entry, currentTime, givers) {
   const left = Math.max(0, entry.endAt - currentTime);
   const saving = Math.round((left * (entry.applied || 0)) / 100);
-  let score = Math.round(Math.round((left * (entry.buff || 0)) / 100) * (entry.type === "Стройка" ? 1.1 : 1.05));
+  let score = Math.round(
+    Math.round((left * (entry.buff || 0)) / 100) * (entry.type === "Стройка" ? 1.1 : 1.05),
+  );
 
   // Буст донатерам: топ-3 по количеству розданных баффов получают множитель
   if (givers && entry.nick) {

@@ -13,8 +13,8 @@ export const error = writable("");
 onSync((v) => syncing.set(v));
 
 function bgFail() {
-  error.set('Ошибка синхронизации');
-  doLoad().then(() => setTimeout(() => error.set(''), 4000));
+  error.set("Ошибка синхронизации");
+  doLoad().then(() => setTimeout(() => error.set(""), 4000));
 }
 
 // Деривативы
@@ -33,16 +33,21 @@ export const research = derived(ranked, ($r) => $r.filter((i) => i.type === "И�
 // Действия — fire-and-forget, UI не блокируют
 export function doApply(buffId, percent, giverNick) {
   buffs.update((arr) => {
-    const entry = arr.find((b) => b.id === buffId);
-    if (!entry) return arr;
+    const idx = arr.findIndex((b) => b.id === buffId);
+    if (idx === -1) return arr;
     const now = nowSec();
-    const rem = Math.max(0, entry.endAt - now);
-    entry.endAt = Math.round(now + rem * (1 - percent / 100));
-    entry.applied = (entry.applied || 0) + percent;
-    entry.appliedCount = (entry.appliedCount || 0) + 1;
-    entry.queueReceived = 1;
-    entry.queueLastAt = now;
-    return arr;
+    const rem = Math.max(0, arr[idx].endAt - now);
+    const updated = {
+      ...arr[idx],
+      endAt: Math.round(now + rem * (1 - percent / 100)),
+      applied: (arr[idx].applied || 0) + percent,
+      appliedCount: (arr[idx].appliedCount || 0) + 1,
+      queueReceived: 1,
+      queueLastAt: now,
+    };
+    const next = [...arr];
+    next[idx] = updated;
+    return next;
   });
 
   const now = nowSec();
@@ -119,33 +124,18 @@ export function doAdd(nick, type, days, hours, editId) {
 
   if (editId) {
     buffs.update((arr) => {
-      const entry = arr.find((b) => b.id === editId);
-      if (entry) {
-        entry.nick = nick;
-        entry.type = type;
-        entry.buff = 0;
-        entry.endAt = endAt;
-        entry.queueReceived = 0;
-        entry.queueLastAt = 0;
-      }
-      return arr;
+      const idx = arr.findIndex((b) => b.id === editId);
+      if (idx === -1) return arr;
+      const updated = { ...arr[idx], nick, type, buff: 0, endAt, queueReceived: 0, queueLastAt: 0 };
+      const next = [...arr];
+      next[idx] = updated;
+      return next;
     });
   } else {
-    buffs.update((arr) => {
-      arr.unshift({
-        id: makeId(),
-        nick,
-        type,
-        buff: 0,
-        endAt,
-        createdAt: now,
-        applied: 0,
-        appliedCount: 0,
-        queueReceived: 0,
-        queueLastAt: 0,
-      });
-      return arr;
-    });
+    buffs.update((arr) => [
+      { id: makeId(), nick, type, buff: 0, endAt, createdAt: now, applied: 0, appliedCount: 0, queueReceived: 0, queueLastAt: 0 },
+      ...arr,
+    ]);
   }
 
   addNick(nick);
