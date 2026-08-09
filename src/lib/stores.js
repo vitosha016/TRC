@@ -111,7 +111,7 @@ export async function doDelete(buffId) {
   } catch { await doLoad(); }
 }
 
-export async function doAdd(nick, type, buff, days, hours, editId) {
+export async function doAdd(nick, type, days, hours, editId) {
   const now = nowSec();
   const endAt = now + (days * 1440 + hours * 60) * 60;
 
@@ -119,7 +119,7 @@ export async function doAdd(nick, type, buff, days, hours, editId) {
     buffs.update(arr => {
       const entry = arr.find(b => b.id === editId);
       if (entry) {
-        entry.nick = nick; entry.type = type; entry.buff = buff || 15;
+        entry.nick = nick; entry.type = type; entry.buff = 15;
         entry.endAt = endAt; entry.queueReceived = 0; entry.queueLastAt = 0;
       }
       return arr;
@@ -127,7 +127,7 @@ export async function doAdd(nick, type, buff, days, hours, editId) {
   } else {
     buffs.update(arr => {
       arr.unshift({
-        id: makeId(), nick, type, buff: buff || 15, endAt,
+        id: makeId(), nick, type, buff: 15, endAt,
         createdAt: now, applied: 0, appliedCount: 0, queueReceived: 0, queueLastAt: 0,
       });
       return arr;

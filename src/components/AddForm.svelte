@@ -3,7 +3,6 @@
 
   let nick = $state('');
   let type = $state('Стройка');
-  let pct  = $state(0);
   let days = $state(0);
   let hours = $state(0);
   let editId = $state('');
@@ -21,8 +20,8 @@
     e.preventDefault();
     if (submitting) return;
     submitting = true;
-    await doAdd(nick, type, pct, days, hours, editId);
-    nick = ''; pct = 0; days = 0; hours = 0; editId = '';
+    await doAdd(nick, type, days, hours, editId);
+    nick = ''; days = 0; hours = 0; editId = '';
     submitting = false;
   }
 
@@ -59,11 +58,6 @@
         </select>
       </div>
 
-      <div class="field-pct">
-        <label for="pctInput">%</label>
-        <input id="pctInput" type="number" bind:value={pct} min="0" max="100" />
-      </div>
-
       <div class="field-days">
         <label for="daysSelect">Дней</label>
         <select id="daysSelect" bind:value={days}>
@@ -97,7 +91,6 @@
   .row { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
   .field-nick { flex: 1; min-width: 120px; }
   .field-type { width: 144px; flex-shrink: 0; }
-  .field-pct  { width: 64px; flex-shrink: 0; }
   .field-days { width: 82px; flex-shrink: 0; }
   .field-hours{ width: 82px; flex-shrink: 0; }
   .field-btn  { width: 110px; flex-shrink: 0; }
