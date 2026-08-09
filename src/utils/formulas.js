@@ -25,16 +25,15 @@ export function makeId() {
 export function scoreBuff(entry, currentTime, givers) {
   const left = Math.max(0, entry.endAt - currentTime);
   const saving = Math.round((left * (entry.applied || 0)) / 100);
-  let score = Math.round(
-    Math.round((left * (entry.buff || 0)) / 100) * (entry.type === "Стройка" ? 1.1 : 1.05),
-  );
+  const buffRate = entry.buff || 15;
+  let score = Math.round(Math.round(left * buffRate / 100) * (entry.type === 'Стройка' ? 1.1 : 1.05));
 
   // Буст донатерам: топ-3 по количеству розданных баффов получают множитель
   if (givers && entry.nick) {
     const sorted = Object.entries(givers).sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
     const rank = sorted.findIndex(([nick]) => nick.toLowerCase() === entry.nick.toLowerCase());
-    if (rank === 0) score = Math.round(score * 3);
-    else if (rank >= 1 && rank <= 2) score = Math.round(score * 2);
+    if (rank === 0) score = Math.round(score * 1.5);
+    else if (rank >= 1 && rank <= 2) score = Math.round(score * 1.25);
   }
 
   return { left, saving, score };
