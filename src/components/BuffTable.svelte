@@ -3,7 +3,7 @@
   import { formatSeconds } from '../lib/formulas.js';
   import Button from './ui/Button.svelte';
 
-  let { giverNick = '' } = $props();
+  let { giverNick = '', onedit = (id) => {} } = $props();
 
   let now = $state(nowSec());
   $effect(() => {
@@ -37,6 +37,7 @@
               {#each [5, 10, 15] as p}
                 <Button variant="small" onclick={() => doApply(e.id, p, giverNick)}>{p}%</Button>
               {/each}
+              <Button variant="small" onclick={() => onedit(e.id)} title="Редактировать">✎</Button>
               <Button variant="danger small" onclick={() => doDelete(e.id)}>✕</Button>
             </td>
           </tr>
@@ -64,6 +65,7 @@
               {#each [5, 10, 15] as p}
                 <Button variant="small" onclick={() => doApply(e.id, p, giverNick)}>{p}%</Button>
               {/each}
+              <Button variant="small" onclick={() => onedit(e.id)} title="Редактировать">✎</Button>
               <Button variant="danger small" onclick={() => doDelete(e.id)}>✕</Button>
             </td>
           </tr>

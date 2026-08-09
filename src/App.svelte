@@ -11,6 +11,7 @@
   import { buffs, history, template, syncing } from './lib/stores.js';
 
   let giverNick = $state('');
+  let editId = $state('');
 
   onMount(() => {
     giverNick = localStorage.getItem('giver_nick') || '';
@@ -46,9 +47,9 @@
   <DonorsBar />
   <LogList />
 
-  <AddForm bind:giverNick onsavegiver={saveGiver} />
+  <AddForm bind:giverNick bind:editId onsavegiver={saveGiver} />
 
-  <BuffTable {giverNick} />
+  <BuffTable {giverNick} onedit={(id) => editId = id} />
 
   <SyncSpinner visible={$syncing > 0} />
 </div>

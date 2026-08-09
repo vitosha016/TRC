@@ -1,16 +1,28 @@
 <script>
-  import { doAdd, nickList } from '../lib/stores.js';
+  import { doAdd, nickList, buffs } from '../lib/stores.js';
   import Button from './ui/Button.svelte';
   import Suggest from './ui/Suggest.svelte';
   import Select from './ui/Select.svelte';
 
-  let { giverNick = $bindable(), onsavegiver = () => {} } = $props();
+  let { giverNick = $bindable(), onsavegiver = () => {}, editId = $bindable('') } = $props();
 
   let nick = $state('');
   let type = $state('Стройка');
   let days = $state(0);
   let hours = $state(0);
-  let editId = $state('');
+
+  // Когда editId меняется — заполняем форму из buffs
+  $effect(() => {
+    if (!editId) { nick = ''; days = 0; hours = 0; return; }
+    let entry;
+    const unsub = buffs.subscribe(v => { entry = v.find(b => b.id === editId); });
+    unsub();
+    if (!entry) return;
+    nick = entry.nick;
+    type = entry.type;
+    days = Math.floor((entry.endAt - entry.createdAt) / 86400);
+    hours = Math.floor(((entry.endAt - entry.createdAt) % 86400) / 3600);
+  });
   let submitting = $state(false);
 
   async function submit(e) {
@@ -21,6 +33,11 @@
     await doAdd(nick, type, days, hours, editId);
     nick = ''; days = 0; hours = 0; editId = '';
     submitting = false;
+    // вернуть фокус для быстрого добавления следующих
+    requestAnimationFrame(() => {
+      const inp = document.querySelector('#snick');
+      if (inp) inp.focus();
+    });
   }
 
   let dayOpts = Array.from({length: 61}, (_, i) => ({ value: i, label: `${i} дн.` }));
@@ -31,7 +48,7 @@
   <form onsubmit={submit} autocomplete="off">
     <div class="row">
       <div class="field-nick">
-        <Suggest bind:value={nick} items={$nickList} placeholder="Ник игрока" />
+        <Suggest id="snick" bind:value={nick} items={$nickList} placeholder="Ник игрока" />
       </div>
 
       <div class="field-type">
