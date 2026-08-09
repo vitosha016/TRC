@@ -1,6 +1,6 @@
 <script>
-  import { givers } from '../lib/stores.js';
-  import { nowSec, formatSeconds } from '../lib/formulas.js';
+  import { givers } from '../utils/stores.js';
+  import { nowSec, formatSeconds } from '../utils/formulas.js';
 
   let donors = $derived(
     Object.entries($givers)

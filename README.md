@@ -11,9 +11,13 @@
 │   ├── api/          # Бекенд на Google AppScript
 │   │   ├── README.md                    # Инструкция по развёртыванию бэка
 │   │   └── googleAppScriptBackend.gs   # Код AppScript (скопипастить в редактор)
-└──└── lib/
-        ├── formulas.js        # Чистые формулы (scoreBuff, rank, calcNeeded…)
-        └── formulas.test.js   # 35 тестов на vitest
+│   ├── utils/         # Чистые формулы + API + сторы
+│   │   ├── formulas.js
+│   │   ├── formulas.test.js
+│   │   ├── api.js
+│   │   └── stores.js
+│   └── components/    # Svelte-компоненты
+│       └── ui/        # Stateless UI-компоненты
 ```
 
 ## Как поднять бекенд

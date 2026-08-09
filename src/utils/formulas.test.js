@@ -256,8 +256,8 @@ describe("scoreBuff", () => {
     expect(left).toBe(0);
   });
 
-  it("saving = round(left * buff% / 100)", () => {
-    const e = { endAt: MOCK_NOW + 100_000, buff: 15, type: "Стройка" };
+  it("saving = round(left * applied / 100)", () => {
+    const e = { endAt: MOCK_NOW + 100_000, applied: 15, type: "Стройка" };
     const { saving } = scoreBuff(e, MOCK_NOW);
     expect(saving).toBe(15000); // 100_000 * 15 / 100 = 15_000
   });
@@ -274,9 +274,9 @@ describe("scoreBuff", () => {
     expect(score).toBe(Math.round(15000 * 1.05)); // 15750
   });
 
-  it("точные значения из таблицы: Ветеран (Стройка, buff=15)", () => {
+  it("точные значения из таблицы: Ветеран (Стройка, applied=15)", () => {
     const left = parseLeft(27, 7, 3);
-    const e = { endAt: MOCK_NOW + left, buff: 15, type: "Стройка" };
+    const e = { endAt: MOCK_NOW + left, buff: 15, applied: 15, type: "Стройка" };
     const { left: calcLeft, saving, score } = scoreBuff(e, MOCK_NOW);
 
     expect(calcLeft).toBe(left); // 2_358_180
@@ -284,14 +284,14 @@ describe("scoreBuff", () => {
     expect(score).toBe(Math.round(Math.round((left * 15) / 100) * 1.1)); // 389_100
   });
 
-  it("точные значения из таблицы: De Vito (Исследования, buff=15)", () => {
+  it("точные значения из таблицы: De Vito (Исследования, applied=30)", () => {
     const left = parseLeft(12, 7, 57);
-    const e = { endAt: MOCK_NOW + left, buff: 15, type: "Исследования" };
+    const e = { endAt: MOCK_NOW + left, buff: 15, applied: 30, type: "Исследования" };
     const { left: calcLeft, saving, score } = scoreBuff(e, MOCK_NOW);
 
     expect(calcLeft).toBe(left); // 1_065_420
-    expect(saving).toBe(Math.round((left * 15) / 100)); // 159_813
-    expect(score).toBe(Math.round(Math.round((left * 15) / 100) * 1.05)); // 167_804
+    expect(saving).toBe(Math.round((left * 30) / 100)); // 319_626
+    expect(score).toBe(Math.round(Math.round((left * 15) / 100) * 1.05)); // 167_804 — score всё ещё от buff
   });
 
   it("buff=0 даёт saving=0 и score=0", () => {

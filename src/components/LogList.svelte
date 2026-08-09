@@ -1,5 +1,5 @@
 <script>
-  import { history } from '../lib/stores.js';
+  import { history } from '../utils/stores.js';
 
   let items = $derived([...$history].sort((a, b) => b.time - a.time).slice(0, 50));
 

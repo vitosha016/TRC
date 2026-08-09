@@ -1,5 +1,5 @@
 <script>
-  import { doAdd, nickList, buffs } from '../lib/stores.js';
+  import { doAdd, nickList, buffs } from '../utils/stores.js';
   import Button from './ui/Button.svelte';
   import Suggest from './ui/Suggest.svelte';
   import Select from './ui/Select.svelte';

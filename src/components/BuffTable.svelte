@@ -1,6 +1,6 @@
 <script>
-  import { build, research, doApply, doDelete, nowSec } from '../lib/stores.js';
-  import { formatSeconds } from '../lib/formulas.js';
+  import { build, research, doApply, doDelete, nowSec } from '../utils/stores.js';
+  import { formatSeconds } from '../utils/formulas.js';
   import Button from './ui/Button.svelte';
 
   let { giverNick = '', onedit = (id) => {} } = $props();

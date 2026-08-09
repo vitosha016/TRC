@@ -23,10 +23,8 @@ export function makeId() {
  */
 export function scoreBuff(entry, currentTime) {
   const left = Math.max(0, entry.endAt - currentTime);
-  const buff = entry.buff || 0;
-  const saving = Math.round((left * buff) / 100);
-  const boost = entry.type === "Стройка" ? 1.1 : 1.05;
-  const score = Math.round(saving * boost);
+  const saving = Math.round(left * (entry.applied || 0) / 100);
+  const score = Math.round(Math.round(left * (entry.buff || 0) / 100) * (entry.type === 'Стройка' ? 1.1 : 1.05));
   return { left, saving, score };
 }
 

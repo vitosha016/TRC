@@ -1,14 +1,14 @@
 <script>
   import { onMount } from 'svelte';
-  import { doLoad, nowSec, addNick, nickList } from './lib/stores.js';
+  import { doLoad, nowSec, addNick, nickList } from './utils/stores.js';
   import BuffTable from './components/BuffTable.svelte';
   import AddForm from './components/AddForm.svelte';
   import DonorsBar from './components/DonorsBar.svelte';
   import LogList from './components/LogList.svelte';
   import SyncSpinner from './components/ui/SyncSpinner.svelte';
   import Button from './components/ui/Button.svelte';
-  import { generateCopyText } from './lib/formulas.js';
-  import { buffs, history, template, syncing } from './lib/stores.js';
+  import { generateCopyText } from './utils/formulas.js';
+  import { buffs, history, template, syncing } from './utils/stores.js';
 
   let giverNick = $state('');
   let editId = $state('');
