@@ -1,5 +1,6 @@
 <script>
   import { doAdd, nickList } from '../lib/stores.js';
+  import Button from './Button.svelte';
 
   let { giverNick = $bindable(), onsavegiver = () => {} } = $props();
 
@@ -98,9 +99,9 @@
       </select>
 
       <input type="hidden" bind:value={editId} />
-      <button class="btn btn-main" type="submit" disabled={submitting}>
+      <Button variant="main" type="submit" disabled={submitting}>
         {submitting ? '...' : editId ? 'Обновить' : 'Добавить'}
-      </button>
+      </Button>
     </div>
 
     <div class="row giver-row">
@@ -162,21 +163,9 @@
   .opt:hover, .opt.focused { background: #e0e0e4; }
   .opt:last-child { border-bottom: 0; }
 
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
-    padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
-    border: 1px solid #e0e0e4; background: #fff; color: #1d1d1f;
-    transition: all .12s; white-space: nowrap; flex-shrink: 0;
-  }
-  .btn:hover { background: #e0e0e4; }
-  .btn-main { background: #1d1d1f; color: #f5f5f7; border-color: #1d1d1f; }
-  .btn-main:hover { opacity: .85; }
-  .btn:disabled { opacity: .5; cursor: default; }
-
   @media (max-width: 700px) {
     .row { flex-direction: column; }
     .row > * { width: 100% !important; }
     .giver-wrap { max-width: 100%; }
-    .btn { width: 100%; }
   }
 </style>

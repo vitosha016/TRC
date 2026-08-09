@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": ["import", "unicorn", "typescript"],
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-console": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2022": true
+  },
+  "globals": {
+    "localStorage": "readonly",
+    "fetch": "readonly",
+    "navigator": "readonly",
+    "alert": "readonly",
+    "confirm": "readonly",
+    "setInterval": "readonly",
+    "clearInterval": "readonly",
+    "setTimeout": "readonly",
+    "document": "readonly",
+    "console": "readonly",
+    "JSON": "readonly",
+    "Math": "readonly",
+    "Date": "readonly",
+    "Object": "readonly",
+    "Array": "readonly",
+    "Set": "readonly",
+    "Map": "readonly",
+    "URLSearchParams": "readonly"
+  }
+}

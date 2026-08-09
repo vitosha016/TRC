@@ -1,6 +1,7 @@
 <script>
   import { build, research, doApply, doDelete, nowSec } from '../lib/stores.js';
   import { formatSeconds } from '../lib/formulas.js';
+  import Button from './Button.svelte';
 
   let { giverNick = '' } = $props();
 
@@ -34,9 +35,9 @@
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
             <td class="act">
               {#each [5, 10, 15] as p}
-                <button class="btn btn-small" onclick={() => doApply(e.id, p, giverNick)}>{p}%</button>
+                <Button variant="small" onclick={() => doApply(e.id, p, giverNick)}>{p}%</Button>
               {/each}
-              <button class="btn btn-small btn-danger" onclick={() => doDelete(e.id)}>✕</button>
+              <Button variant="danger small" onclick={() => doDelete(e.id)}>✕</Button>
             </td>
           </tr>
         {/each}
@@ -61,9 +62,9 @@
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
             <td class="act">
               {#each [5, 10, 15] as p}
-                <button class="btn btn-small" onclick={() => doApply(e.id, p, giverNick)}>{p}%</button>
+                <Button variant="small" onclick={() => doApply(e.id, p, giverNick)}>{p}%</Button>
               {/each}
-              <button class="btn btn-small btn-danger" onclick={() => doDelete(e.id)}>✕</button>
+              <Button variant="danger small" onclick={() => doDelete(e.id)}>✕</Button>
             </td>
           </tr>
         {/each}
@@ -108,17 +109,6 @@
   .count { text-align: center; white-space: nowrap; font-size: 11px; color: #86868b; }
 
   .act { text-align: right; white-space: nowrap; }
-
-  .btn {
-    display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px;
-    border-radius: 5px; font-size: 12px; font-weight: 600; cursor: pointer;
-    border: 1px solid #e0e0e4; background: #fff; color: #1d1d1f;
-    transition: all .12s; white-space: nowrap;
-  }
-  .btn:hover { background: #e0e0e4; }
-  .btn-small { padding: 3px 7px; font-size: 11px; border-radius: 4px; }
-  .btn-danger { color: #e03131; border-color: transparent; }
-  .btn-danger:hover { background: rgba(224,49,49,.12); }
 
   .empty { text-align: center; padding: 40px; color: #86868b; grid-column: 1 / -1; }
 </style>
