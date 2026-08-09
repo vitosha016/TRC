@@ -30,6 +30,7 @@
 См. [src/api/README.md](src/api/README.md) — пошаговая инструкция.
 
 Кратко:
+
 1. Создать гуглотаблицу → Extensions → Apps Script
 2. Скопировать код из `src/api/googleAppScriptBackend.gs`
 3. Опубликовать как WebApp → скопировать ID
@@ -86,6 +87,7 @@ score  = round(round(left × buff / 100) × boost)  // приоритет сор
 ### Буст донатерам
 
 Топ-3 донатера (по количеству розданных баффов) получают множитель к score:
+
 - **№1** — `score × 1.5`
 - **№2-3** — `score × 1.25`
 
@@ -100,6 +102,7 @@ score  = round(round(left × buff / 100) × boost)  // приоритет сор
 ### Правило 🔥 (queueFire)
 
 Игрок получает 🔥, если **в его категории** (Стройка / Исследования):
+
 - есть хотя бы один уже получивший бафф в этом круге (`queueReceived = 1`)
 - **и** количество неполучивших ∈ {1, 2}
 
@@ -108,6 +111,7 @@ score  = round(round(left × buff / 100) × boost)  // приоритет сор
 ### Применение баффа (applyBuff)
 
 При нажатии 5%/10%/15%:
+
 - `endAt = now + remaining × (1 − percent/100)` — оставшееся время сокращается
 - `applied` += percent, `appliedCount` += 1
 - `queueReceived = 1`, `queueLastAt = now`
