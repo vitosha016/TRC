@@ -1,7 +1,7 @@
 <script>
   import { build, research, doApply, doDelete, nowSec } from '../lib/stores.js';
   import { formatSeconds } from '../lib/formulas.js';
-  import Button from './Button.svelte';
+  import Button from './ui/Button.svelte';
 
   let { giverNick = '' } = $props();
 

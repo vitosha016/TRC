@@ -6,7 +6,7 @@
   import DonorsBar from './components/DonorsBar.svelte';
   import LogList from './components/LogList.svelte';
   import SyncSpinner from './components/SyncSpinner.svelte';
-  import Button from './components/Button.svelte';
+  import Button from './components/ui/Button.svelte';
   import { generateCopyText } from './lib/formulas.js';
   import { buffs, history, template } from './lib/stores.js';
 
