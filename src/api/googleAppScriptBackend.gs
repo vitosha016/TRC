@@ -38,9 +38,9 @@ function doGet(e) {
       case "all":
         return json(handleGetAll());
       case "history":
-        return json(handleGetHistory());
+        return json(cacheGet("trc_history", handleGetHistory, 1800));
       case "state":
-        return json(handleGetState());
+        return json(cacheGet("trc_state", handleGetState, 3600));
       default:
         return json({ ok: false, error: "Unknown type: " + params.type });
     }
@@ -88,6 +88,8 @@ function handleSave(postData) {
   if (postData.nick) addNick(postData.nick);
   if (postData.nick2) addNick(postData.nick2);
   if (postData.template) setTemplate(postData.template);
+
+  invalidateCaches();
 
   return {
     ok: true,
@@ -306,6 +308,25 @@ function setTemplate(template) {
 }
 
 // === УТИЛИТЫ ===============================================
+
+function cacheGet(key, handler, ttlSec) {
+  var cache = CacheService.getScriptCache();
+  var cached = cache.get(key);
+  if (cached !== null) {
+    var parsed = JSON.parse(cached);
+    parsed.cached = true;
+    return parsed;
+  }
+  var data = handler();
+  cache.put(key, JSON.stringify(data), ttlSec);
+  return data;
+}
+
+function invalidateCaches() {
+  var cache = CacheService.getScriptCache();
+  cache.remove("trc_state");
+  cache.remove("trc_history");
+}
 
 function json(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(

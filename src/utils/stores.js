@@ -189,7 +189,7 @@ export function doAdd(nick, type, days, hours, editId) {
 export async function doLoad() {
   const cached = getFromLS();
   if (cached) {
-    const cachedBuffs = (cached.buffs || []).filter(b => !isExpired(b));
+    const cachedBuffs = (cached.buffs || []).filter((b) => !isExpired(b));
     buffs.set(cachedBuffs);
     history.set(cached.history || []);
     givers.set(cached.givers || {});
@@ -199,7 +199,7 @@ export async function doLoad() {
 
   const d = await loadState();
   if (d.ok) {
-    const fresh = (d.buffs || []).filter(b => b.endAt > nowSec());
+    const fresh = (d.buffs || []).filter((b) => b.endAt > nowSec());
     buffs.set(fresh);
     if (fresh.length < (d.buffs || []).length) {
       bgSave({ buffs: fresh }).catch(() => {});
