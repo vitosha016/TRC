@@ -40,7 +40,7 @@
   .donors { margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
   .donor-chip {
     background: #fff; border: 1px solid #e0e0e4; border-radius: 8px;
-    padding: 6px 10px; font-size: 12px; display: flex; align-items: center; gap: 6px;
+    padding: 8px; font-size: 12px; display: flex; align-items: center; gap: 8px;
   }
   .d-nick { font-weight: 600; }
   .d-total { color: #86868b; }

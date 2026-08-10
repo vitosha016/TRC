@@ -34,7 +34,7 @@
 
 <style>
   .log { margin-bottom: 16px; }
-  .log summary { font-size: 13px; font-weight: 600; color: #86868b; cursor: pointer; padding: 6px 0; user-select: none; }
+  .log summary { font-size: 13px; font-weight: 600; color: #86868b; cursor: pointer; padding: 8px 0; user-select: none; }
   .log table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .log th { text-align: left; padding: 4px 8px; color: #86868b; font-size: 10px; font-weight: 600; text-transform: uppercase; border-bottom: 1px solid #e0e0e4; }
   .log td { padding: 4px 8px; border-bottom: 1px solid #e0e0e4; }

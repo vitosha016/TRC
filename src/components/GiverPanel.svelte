@@ -42,14 +42,14 @@
 
 <style>
   .label { display: block; font-size: 11px; color: #86868b; margin-bottom: 4px; }
-  .giver-row { margin-bottom: 12px; }
+  .giver-row { margin-bottom: 8px; }
 
   .donors {
-    display: flex; flex-direction: row; flex-wrap: nowrap; gap: 6px;
+    display: flex; flex-direction: row; flex-wrap: nowrap; gap: 8px;
     overflow-x: auto; padding-bottom: 4px;
   }
   .donor-chip {
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; gap: 8px;
     font-size: 12px; padding: 4px 8px;     border-radius: 6px;
     background: #f5f5f7; border: 1px solid #e0e0e4;
     white-space: nowrap; flex-shrink: 0;

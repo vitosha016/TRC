@@ -18,18 +18,18 @@
 <style>
   .sync-spinner {
     position: fixed; bottom: 12px; right: 16px; z-index: 99;
-    display: flex; align-items: center; gap: 6px;
-    background: #1d1d1f; color: #f5f5f7; font-size: 11px;
-    padding: 5px 12px; border-radius: 6px;
+    display: flex; align-items: center; gap: 8px;
+    background: #1d1d1f; color: #fff; font-size: 11px;
+    padding: 4px 12px; border-radius: 6px;
     pointer-events: none; white-space: nowrap;
   }
   .sync-spinner::before {
     content: ''; flex-shrink: 0;
     width: 10px; height: 10px; border: 2px solid transparent;
-    border-top-color: #f5f5f7; border-radius: 50%;
+    border-top-color: #fff; border-radius: 50%;
     animation: spin .6s linear infinite;
   }
   .sync-spinner.error { background: #e03131; }
-  .sync-spinner.error::before { border-top-color: #f5f5f7; }
+  .sync-spinner.error::before { border-top-color: #fff; }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>

@@ -1,6 +1,6 @@
 # TRC × FRC — Game Center
 
-Управление очередью баффов для Tiles Survive. 
+Управление очередью баффов для Tiles Survive.
 Svelte 5 + Vite + Google AppScript.
 
 ## Быстрый старт

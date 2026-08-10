@@ -67,7 +67,7 @@
     max-height: 180px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,.08);
   }
   .dropdown.show { display: block; }
-  .opt { padding: 7px 10px; font-size: 13px; cursor: pointer; border-bottom: 1px solid #e0e0e4; }
+  .opt { padding: 8px; font-size: 13px; cursor: pointer; border-bottom: 1px solid #e0e0e4; }
   .opt:hover, .opt.focused { background: #e0e0e4; }
   .opt:last-child { border-bottom: 0; }
 </style>

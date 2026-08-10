@@ -12,14 +12,20 @@ export const error = writable("");
 
 onSync((v) => syncing.set(v));
 
-const LS_KEY = 'trc_cache';
+const LS_KEY = "trc_cache";
 
 function saveToLS(data) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch {}
 }
 
 function getFromLS() {
-  try { return JSON.parse(localStorage.getItem(LS_KEY)); } catch { return null; }
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY));
+  } catch {
+    return null;
+  }
 }
 
 function bgFail() {
@@ -27,10 +33,15 @@ function bgFail() {
   doLoad().then(() => setTimeout(() => error.set(""), 4000));
 }
 
+function isExpired(b) {
+  return b.endAt <= nowSec();
+}
+
 // Деривативы
 export const ranked = derived([buffs, givers], ([$buffs, $givers]) => {
   const ns = nowSec();
-  const enr = $buffs.map((b) => ({ ...b, ...scoreBuff(b, ns, $givers) }));
+  const active = $buffs.filter((b) => b.endAt > ns);
+  const enr = active.map((b) => ({ ...b, ...scoreBuff(b, ns, $givers) }));
   const fireIds = getQueueFireIds(enr);
   return enr
     .map((b) => ({ ...b, queueFire: fireIds.has(b.id) }))
@@ -177,7 +188,8 @@ export function doAdd(nick, type, days, hours, editId) {
 export async function doLoad() {
   const cached = getFromLS();
   if (cached) {
-    buffs.set(cached.buffs || []);
+    const cachedBuffs = (cached.buffs || []).filter(b => !isExpired(b));
+    buffs.set(cachedBuffs);
     history.set(cached.history || []);
     givers.set(cached.givers || {});
     nickList.set(cached.nicks || []);
@@ -186,13 +198,23 @@ export async function doLoad() {
 
   const d = await loadAll();
   if (d.ok) {
-    buffs.set(d.buffs || []);
+    const fresh = (d.buffs || []).filter(b => b.endAt > nowSec());
+    buffs.set(fresh);
+    if (fresh.length < (d.buffs || []).length) {
+      bgSave({ buffs: fresh }).catch(() => {});
+    }
     history.set(d.history || []);
     givers.set(d.givers || {});
     nickList.set(d.nicks || []);
     template.set(d.template || {});
     error.set("");
-    saveToLS({ buffs: d.buffs, history: d.history, givers: d.givers, nicks: d.nicks, template: d.template });
+    saveToLS({
+      buffs: fresh,
+      history: d.history,
+      givers: d.givers,
+      nicks: d.nicks,
+      template: d.template,
+    });
   }
 }
 

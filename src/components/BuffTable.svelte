@@ -115,44 +115,46 @@
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 16px;
   }
 
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
   }
 
-  .card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .card-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
   .cnt { font-size: 12px; color: #86868b; font-weight: 400; }
 
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  th { text-align: left; padding: 5px 6px; color: #86868b; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; border-bottom: 2px solid #e0e0e4; }
-  td { padding: 6px; border-bottom: 1px solid #e0e0e4; vertical-align: middle; }
+  th { text-align: left; padding: 4px 8px; color: #86868b; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; border-bottom: 2px solid #e0e0e4; }
+  td { padding: 4px 8px; border-bottom: 1px solid #e0e0e4; vertical-align: middle; }
+  tr:hover td { background: rgba(0,0,0,.03); }
+  tr.fire:hover td { background: rgba(245,158,11,.16); }
   .th-act { text-align: right; }
 
   tr.fire td { background: #fff4e6; }
   tr.fire { background: #fff4e6; }
-  tr.fire td:first-child { border-left: 3px solid #e8590c; }
+  tr.fire td:first-child { border-left: 4px solid #e8590c; }
 
   .rank { width: 24px; text-align: center; font-weight: 700; color: #86868b; }
   tr.fire .rank { color: #e8590c; }
   .name { font-weight: 600; }
   .time { white-space: nowrap; }
-  .saving { text-align: right; white-space: nowrap; font-weight: 600; }
+  .saving { text-align: right; white-space: nowrap; }
   .count { text-align: center; white-space: nowrap; font-size: 11px; color: #86868b; }
 
   .act { text-align: right; white-space: nowrap; }
   .mobile-act { display: none; }
 
-  .empty { text-align: center; padding: 40px; color: #86868b; grid-column: 1 / -1; }
+  .empty { text-align: center; padding: 32px; color: #86868b; grid-column: 1 / -1; }
 
   @media (max-width: 600px) {
     .th-act { display: none; }
     .act { display: none; }
     .mobile-act { display: table-row; }
-    .mobile-act td { padding: 4px 6px 8px; text-align: right; white-space: normal; border-top: 0; }
+    .mobile-act td { padding: 4px 8px 8px; text-align: right; white-space: normal; border-top: 0; }
     tr:has(+ .mobile-act) td { border-bottom: 0; }
     .mobile-act td :global(.btn) { margin: 1px; }
-    td, th { padding: 4px 3px; font-size: 11px; }
+    td, th { padding: 4px; font-size: 11px; }
   }
 </style>
