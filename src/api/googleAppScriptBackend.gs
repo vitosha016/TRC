@@ -37,6 +37,10 @@ function doGet(e) {
     switch (params.type) {
       case "all":
         return json(handleGetAll());
+      case "history":
+        return json(handleGetHistory());
+      case "state":
+        return json(handleGetState());
       default:
         return json({ ok: false, error: "Unknown type: " + params.type });
     }
@@ -54,6 +58,23 @@ function handleGetAll() {
     ok: true,
     buffs: getBuffs(),
     history: getHistory(),
+    givers: getGivers(),
+    nicks: getNicks(),
+    template: getTemplate(),
+  };
+}
+
+function handleGetHistory() {
+  return {
+    ok: true,
+    history: getHistory(),
+  };
+}
+
+function handleGetState() {
+  return {
+    ok: true,
+    buffs: getBuffs(),
     givers: getGivers(),
     nicks: getNicks(),
     template: getTemplate(),

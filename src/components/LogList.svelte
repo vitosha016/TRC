@@ -1,7 +1,15 @@
 <script>
-  import { history } from '../utils/stores.js';
+  import { history, doLoadHistory } from '../utils/stores.js';
 
+  let loaded = $state(false);
   let items = $derived([...$history].sort((a, b) => b.time - a.time).slice(0, 50));
+
+  function handleToggle(e) {
+    if (e.target.open && !loaded) {
+      loaded = true;
+      doLoadHistory();
+    }
+  }
 
   function dt(t) {
     const d = new Date(t * 1000);
@@ -10,7 +18,7 @@
   }
 </script>
 
-<details class="log" open={items.length > 0 && items.length < 5}>
+<details class="log" ontoggle={handleToggle}>
   <summary>История транзакций</summary>
   {#if items.length === 0}
     <div class="empty">Пока транзакций нет</div>

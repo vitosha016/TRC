@@ -1,7 +1,7 @@
 const GAS = `https://script.google.com/macros/s/${import.meta.env.PUBLIC_PROD_GOOGLE_APPSCRIPT_ID}/exec`;
 
-export async function gasGet() {
-  const r = await fetch(GAS + "?type=all", { redirect: "follow" });
+export async function gasGet(type = "all") {
+  const r = await fetch(GAS + "?type=" + type, { redirect: "follow" });
   return r.json();
 }
 
@@ -36,8 +36,16 @@ async function track(p) {
   }
 }
 
+export function loadState() {
+  return track(gasGet("state"));
+}
+
+export function loadHistory() {
+  return track(gasGet("history"));
+}
+
 export function loadAll() {
-  return track(gasGet());
+  return track(gasGet("all"));
 }
 
 export function bgSave(data) {

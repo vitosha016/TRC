@@ -1,5 +1,5 @@
 import { writable, derived } from "svelte/store";
-import { loadAll, bgSave, onSync } from "./api.js";
+import { loadState, loadHistory, bgSave, onSync } from "./api.js";
 import { scoreBuff, getQueueFireIds, makeId } from "./formulas.js";
 
 export const buffs = writable([]);
@@ -31,6 +31,7 @@ function getFromLS() {
 function bgFail() {
   error.set("Ошибка синхронизации");
   doLoad().then(() => setTimeout(() => error.set(""), 4000));
+  doLoadHistory();
 }
 
 function isExpired(b) {
@@ -196,26 +197,38 @@ export async function doLoad() {
     template.set(cached.template || {});
   }
 
-  const d = await loadAll();
+  const d = await loadState();
   if (d.ok) {
     const fresh = (d.buffs || []).filter(b => b.endAt > nowSec());
     buffs.set(fresh);
     if (fresh.length < (d.buffs || []).length) {
       bgSave({ buffs: fresh }).catch(() => {});
     }
-    history.set(d.history || []);
     givers.set(d.givers || {});
     nickList.set(d.nicks || []);
     template.set(d.template || {});
     error.set("");
     saveToLS({
       buffs: fresh,
-      history: d.history,
       givers: d.givers,
       nicks: d.nicks,
       template: d.template,
     });
   }
+}
+
+export async function doLoadHistory() {
+  const d = await loadHistory();
+  if (d.ok) {
+    history.set(d.history || []);
+    saveHistoryToLS(d.history);
+  }
+}
+
+function saveHistoryToLS(h) {
+  const cached = getFromLS() || {};
+  cached.history = h;
+  saveToLS(cached);
 }
 
 export function addNick(nick) {
