@@ -12,7 +12,7 @@
   let matches = $derived(
     searching
       ? items.filter(i => i.toLowerCase().includes(searching.toLowerCase())).slice(0, 10)
-      : items.slice(0, 10)
+      : []
   );
 
   function pick(n) { value = n; open = false; focusing = -1; onpick?.(n); }

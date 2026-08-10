@@ -1,8 +1,11 @@
 <script>
-  let { children } = $props();
+  let { children, title = '' } = $props();
 </script>
 
 <div class="card">
+  {#if title}
+    <div class="card-label">{title}</div>
+  {/if}
   {@render children?.()}
 </div>
 
@@ -10,6 +13,10 @@
   .card {
     background: #fff; border: 1px solid #e0e0e4;
     border-radius: 10px; padding: 14px 16px;
-    min-width: 0; overflow-y: auto;
+    min-width: 0;
+  }
+  .card-label {
+    display: block; font-size: 11px; color: #86868b;
+    margin-bottom: 4px;
   }
 </style>

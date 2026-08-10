@@ -12,6 +12,16 @@ export const error = writable("");
 
 onSync((v) => syncing.set(v));
 
+const LS_KEY = 'trc_cache';
+
+function saveToLS(data) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
+}
+
+function getFromLS() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)); } catch { return null; }
+}
+
 function bgFail() {
   error.set("Ошибка синхронизации");
   doLoad().then(() => setTimeout(() => error.set(""), 4000));
@@ -165,6 +175,15 @@ export function doAdd(nick, type, days, hours, editId) {
 }
 
 export async function doLoad() {
+  const cached = getFromLS();
+  if (cached) {
+    buffs.set(cached.buffs || []);
+    history.set(cached.history || []);
+    givers.set(cached.givers || {});
+    nickList.set(cached.nicks || []);
+    template.set(cached.template || {});
+  }
+
   const d = await loadAll();
   if (d.ok) {
     buffs.set(d.buffs || []);
@@ -173,6 +192,7 @@ export async function doLoad() {
     nickList.set(d.nicks || []);
     template.set(d.template || {});
     error.set("");
+    saveToLS({ buffs: d.buffs, history: d.history, givers: d.givers, nicks: d.nicks, template: d.template });
   }
 }
 

@@ -46,12 +46,23 @@
             <td class="time">{formatSeconds(l)}</td>
             <td class="saving">{formatSeconds(e.saving)}</td>
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
-            <td class="act">
+            <td>
+              <div class="act">
               {#each [5, 10, 15] as p}
-                <Button variant="small" onclick={() => doApply(e.id, p, giverNick)} title="Ускорить {e.nick} на {p}%">{p}%</Button>
+                <Button variant={'small pct' + p} onclick={() => doApply(e.id, p, giverNick)} title={'Ускорить ' + e.nick + ' на ' + p + '%'}>{p}%</Button>
               {/each}
-              <Button variant="small" onclick={() => onedit(e.id)} title="Редактировать {e.nick}">✎</Button>
-              <Button variant="danger small" onclick={() => doDelete(e.id)} title="Удалить {e.nick}">✕</Button>
+              <Button variant="small" onclick={() => onedit(e.id)} title={'Редактировать ' + e.nick}>✎</Button>
+              <Button variant="small" onclick={() => doDelete(e.id)} title={'Удалить ' + e.nick}>✕</Button>
+              </div>
+            </td>
+          </tr>
+          <tr class="mobile-act" class:fire={e.queueFire}>
+            <td colspan="6">
+              {#each [5, 10, 15] as p}
+                <Button variant={'small pct' + p} onclick={() => doApply(e.id, p, giverNick)} title={'Ускорить ' + e.nick + ' на ' + p + '%'}>{p}%</Button>
+              {/each}
+              <Button variant="small" onclick={() => onedit(e.id)} title={'Редактировать ' + e.nick}>✎</Button>
+              <Button variant="small" onclick={() => doDelete(e.id)} title={'Удалить ' + e.nick}>✕</Button>
             </td>
           </tr>
         {/each}
@@ -74,12 +85,23 @@
             <td class="time">{formatSeconds(l)}</td>
             <td class="saving">{formatSeconds(e.saving)}</td>
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
-            <td class="act">
+            <td>
+              <div class="act">
               {#each [5, 10, 15] as p}
-                <Button variant="small" onclick={() => doApply(e.id, p, giverNick)} title="Ускорить {e.nick} на {p}%">{p}%</Button>
+                <Button variant={'small pct' + p} onclick={() => doApply(e.id, p, giverNick)} title={'Ускорить ' + e.nick + ' на ' + p + '%'}>{p}%</Button>
               {/each}
-              <Button variant="small" onclick={() => onedit(e.id)} title="Редактировать {e.nick}">✎</Button>
-              <Button variant="danger small" onclick={() => doDelete(e.id)} title="Удалить {e.nick}">✕</Button>
+              <Button variant="small" onclick={() => onedit(e.id)} title={'Редактировать ' + e.nick}>✎</Button>
+              <Button variant="small" onclick={() => doDelete(e.id)} title={'Удалить ' + e.nick}>✕</Button>
+              </div>
+            </td>
+          </tr>
+          <tr class="mobile-act" class:fire={e.queueFire}>
+            <td colspan="6">
+              {#each [5, 10, 15] as p}
+                <Button variant={'small pct' + p} onclick={() => doApply(e.id, p, giverNick)} title={'Ускорить ' + e.nick + ' на ' + p + '%'}>{p}%</Button>
+              {/each}
+              <Button variant="small" onclick={() => onedit(e.id)} title={'Редактировать ' + e.nick}>✎</Button>
+              <Button variant="small" onclick={() => doDelete(e.id)} title={'Удалить ' + e.nick}>✕</Button>
             </td>
           </tr>
         {/each}
@@ -109,6 +131,7 @@
   .th-act { text-align: right; }
 
   tr.fire td { background: #fff4e6; }
+  tr.fire { background: #fff4e6; }
   tr.fire td:first-child { border-left: 3px solid #e8590c; }
 
   .rank { width: 24px; text-align: center; font-weight: 700; color: #86868b; }
@@ -119,13 +142,17 @@
   .count { text-align: center; white-space: nowrap; font-size: 11px; color: #86868b; }
 
   .act { text-align: right; white-space: nowrap; }
+  .mobile-act { display: none; }
 
   .empty { text-align: center; padding: 40px; color: #86868b; grid-column: 1 / -1; }
 
   @media (max-width: 600px) {
-    .act { white-space: normal; display: flex; flex-wrap: wrap; gap: 2px; justify-content: flex-end; }
-    .act :global(.btn) { margin-bottom: 2px; }
-    .count { display: none; }
+    .th-act { display: none; }
+    .act { display: none; }
+    .mobile-act { display: table-row; }
+    .mobile-act td { padding: 4px 6px 8px; text-align: right; white-space: normal; border-top: 0; }
+    tr:has(+ .mobile-act) td { border-bottom: 0; }
+    .mobile-act td :global(.btn) { margin: 1px; }
     td, th { padding: 4px 3px; font-size: 11px; }
   }
 </style>

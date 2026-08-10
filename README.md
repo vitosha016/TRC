@@ -1,6 +1,7 @@
 # TRC × FRC — Game Center
 
-Управление очередью баффов для Tiles Survive. Svelte 5 + Vite + Google AppScript.
+Управление очередью баффов для Tiles Survive. 
+Svelte 5 + Vite + Google AppScript.
 
 ## Быстрый старт
 
@@ -11,19 +12,6 @@ npm run dev                   # http://localhost:5173
 ```
 
 ## Как поднять
-
-<details>
-<summary>🖥️ Фронтенд (локально)</summary>
-
-```bash
-npm install
-npm run dev
-```
-
-Открыть `http://localhost:5173`. Горячая перезагрузка — Vite + Svelte.
-
-Переменная `PUBLIC_PROD_GOOGLE_APPSCRIPT_ID` в `.env` указывает на рабочий GAS-бекенд. Без неё запросы пойдут в пустоту.
-</details>
 
 <details>
 <summary>☁️ Бекенд (Google AppScript)</summary>
@@ -40,6 +28,19 @@ npm run dev
 6. Вписать в `.env`: `PUBLIC_PROD_GOOGLE_APPSCRIPT_ID=<id>`
 
 После первого запроса скрипт сам создаст листы: `Buffs`, `History`, `Givers`, `Nicks`, `Template`.
+</details>
+
+<details>
+<summary>🖥️ Фронтенд (локально)</summary>
+
+```bash
+npm install
+npm run dev
+```
+
+Открыть `http://localhost:5173`. Горячая перезагрузка — Vite + Svelte.
+
+Переменная `PUBLIC_PROD_GOOGLE_APPSCRIPT_ID` в `.env` указывает на рабочий GAS-бекенд. Без неё запросы пойдут в пустоту.
 </details>
 
 <details>
@@ -104,13 +105,7 @@ npm run lint      # Линтер с автофиксом (oxlint --fix)
 npm run format    # Форматтер (oxfmt)
 ```
 
-## Архитектура UX
-
-- **Оптимистичный рендеринг** — add/apply/delete меняют локальное состояние мгновенно, без ожидания бекенда. UI не блокируется.
-- **Фоновая синхронизация** — запросы к GAS уходят в фоне. Раз в 2 минуты — полная ресинхронизация `doLoad()`.
-- **Плашка ошибок** — при сбое загорается красная плашка на 4 секунды, затем автосинхронизация.
-- **Острова-карточки** — форма + giver/донатеры в ряд (50/50), таблицы в ряд, история под details.
-- **Автокомплит** — при фокусе показывает всех, фильтрует по мере ввода, навигация с клавиатуры.
+## Механика сортировки
 
 <details>
 <summary>Механика сортировки и 🔥-правила</summary>

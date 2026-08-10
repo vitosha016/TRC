@@ -18,12 +18,13 @@
 <style>
   .sync-spinner {
     position: fixed; bottom: 12px; right: 16px; z-index: 99;
+    display: flex; align-items: center; gap: 6px;
     background: #1d1d1f; color: #f5f5f7; font-size: 11px;
-    padding: 5px 12px 5px 26px; border-radius: 6px;
-    pointer-events: none;
+    padding: 5px 12px; border-radius: 6px;
+    pointer-events: none; white-space: nowrap;
   }
   .sync-spinner::before {
-    content: ''; position: absolute; left: 8px; top: 50%; margin-top: -5px;
+    content: ''; flex-shrink: 0;
     width: 10px; height: 10px; border: 2px solid transparent;
     border-top-color: #f5f5f7; border-radius: 50%;
     animation: spin .6s linear infinite;

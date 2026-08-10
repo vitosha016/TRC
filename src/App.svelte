@@ -41,7 +41,7 @@
       <h1>TRC · Баффы</h1>
       <div class="sub">Управление очередью</div>
     </div>
-    <Button variant="main" onclick={copy}>Копировать в чат</Button>
+    <Button variant="main invert" onclick={copy}>📋 Копировать в чат</Button>
   </header>
 
   <div class="panel-row">

@@ -5,6 +5,8 @@
   import Select from './ui/Select.svelte';
   import Card from './ui/Card.svelte';
 
+  import { tick } from 'svelte';
+
   let { editId = $bindable('') } = $props();
 
   let nick = $state('');
@@ -22,6 +24,12 @@
     type = entry.type;
     days = Math.floor((entry.endAt - entry.createdAt) / 86400);
     hours = Math.floor(((entry.endAt - entry.createdAt) % 86400) / 3600);
+    tick().then(() => {
+      setTimeout(() => {
+        const inp = document.querySelector('#snick');
+        if (inp) { inp.scrollIntoView({ block: 'center' }); inp.focus(); }
+      }, 100);
+    });
   });
 
   function submit(e) {
@@ -39,7 +47,7 @@
   let hourOpts = Array.from({length: 24}, (_, i) => ({ value: i, label: `${i} ч.` }));
 </script>
 
-<Card>
+<Card title="Добавление участника">
   <form onsubmit={submit} autocomplete="off">
     <div class="row">
       <div class="field-nick">
@@ -65,7 +73,7 @@
 
     <div class="btn-row">
       <Button variant="main full" type="submit">
-        {editId ? 'Обновить' : 'Добавить'}
+        {editId ? 'Обновить' : '+ Добавить'}
       </Button>
     </div>
   </form>
