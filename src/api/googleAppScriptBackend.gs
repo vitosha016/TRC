@@ -8,7 +8,9 @@
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
-  lock.tryLock(5000);
+  if (!lock.tryLock(5000)) {
+    return json({ ok: false, error: "Server busy, retry" });
+  }
 
   try {
     var params = e.parameter || {};
@@ -29,7 +31,9 @@ function doPost(e) {
 
 function doGet(e) {
   var lock = LockService.getScriptLock();
-  lock.tryLock(5000);
+  if (!lock.tryLock(5000)) {
+    return json({ ok: false, error: "Server busy, retry" });
+  }
 
   try {
     var params = e.parameter || {};

@@ -9,7 +9,7 @@
         total: Number(d.total || 0),
         last: Number(d.last_buff || 0),
       }))
-      .sort((a, b) => b.total - a.total || a.nick.localeCompare(a.nick, 'ru'))
+      .sort((a, b) => b.total - a.total || a.nick.localeCompare(b.nick, 'ru'))
   );
 
   let now = $state(nowSec());

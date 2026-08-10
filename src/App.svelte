@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { doLoad, nowSec, addNick, nickList } from './utils/stores.js';
+  import { doLoad, nowSec, addNick, nickList, givers } from './utils/stores.js';
   import BuffTable from './components/BuffTable.svelte';
   import AddForm from './components/AddForm.svelte';
   import GiverPanel from './components/GiverPanel.svelte';
@@ -23,11 +23,12 @@
   function saveGiver() { const v = giverNick.trim(); localStorage.setItem('giver_nick', v); if (v) addNick(v); }
 
   async function copy() {
-    let b, h, t;
+    let b, h, t, gv;
     buffs.subscribe(v => b = v)();
     history.subscribe(v => h = v)();
     template.subscribe(v => t = v)();
-    const text = generateCopyText({ buffs: b, history: h, template: t, currentTime: nowSec() });
+    givers.subscribe(v => gv = v)();
+    const text = generateCopyText({ buffs: b, history: h, template: t, givers: gv, currentTime: nowSec() });
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(text);
       alert('Скопировано!');
