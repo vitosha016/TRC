@@ -45,7 +45,7 @@
     });
   }
 
-  let dayOpts = Array.from({length: 61}, (_, i) => ({ value: i, label: `${i} дн.` }));
+  let dayOpts = Array.from({length: 151}, (_, i) => ({ value: i, label: `${i} дн.` }));
   let hourOpts = Array.from({length: 24}, (_, i) => ({ value: i, label: `${i} ч.` }));
 </script>
 
