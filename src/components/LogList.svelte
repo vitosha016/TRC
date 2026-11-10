@@ -24,7 +24,7 @@
     <div class="empty">Пока транзакций нет</div>
   {:else}
     <table>
-      <thead><tr><th>Время</th><th>От кого</th><th>Кому</th><th>Тип</th><th>%</th></tr></thead>
+      <thead><tr><th>Время</th><th>Кто добавил</th><th>Кому</th><th>Тип</th><th>%</th></tr></thead>
       <tbody>
       {#each items as h}
         <tr>

@@ -1,6 +1,9 @@
 <script>
   import { onMount } from 'svelte';
-  import { doLoad, addNick, buffs, template, syncing, error } from './utils/stores.js';
+  import {
+    doLoad, refreshFromServer, startSync, addNick,
+    buffs, template, syncing, error, lastSyncAt,
+  } from './utils/stores.js';
   import BuffTable from './components/BuffTable.svelte';
   import AddForm from './components/AddForm.svelte';
   import GiverPanel from './components/GiverPanel.svelte';
@@ -11,12 +14,23 @@
 
   let giverNick = $state('');
   let editId = $state('');
+  let clock = $state(nowSec());
+
+  let updatedText = $derived.by(() => {
+    if (!$lastSyncAt) return '…';
+    const s = Math.max(0, clock - $lastSyncAt);
+    return s < 5 ? 'только что' : `${s}с назад`;
+  });
+
+  $effect(() => {
+    const t = setInterval(() => { clock = nowSec(); }, 10_000);
+    return () => clearInterval(t);
+  });
 
   onMount(() => {
     giverNick = localStorage.getItem('giver_nick') || '';
     doLoad();
-    const loadTimer = setInterval(doLoad, 120_000);
-    return () => clearInterval(loadTimer);
+    return startSync();
   });
 
   function saveGiver() { const v = giverNick.trim(); localStorage.setItem('giver_nick', v); if (v) addNick(v); }
@@ -37,9 +51,12 @@
   <header class="header">
     <div>
       <h1>TRC · Баффы</h1>
-      <div class="sub">Управление очередью</div>
+      <div class="sub">Управление очередью · обновлено {updatedText}</div>
     </div>
-    <Button variant="main invert" onclick={copy}>📋 Копировать в чат</Button>
+    <div class="header-actions">
+      <Button variant="small" onclick={() => refreshFromServer(true)} title="Обновить">↻</Button>
+      <Button variant="main invert" onclick={copy}>📋 Копировать в чат</Button>
+    </div>
   </header>
 
   <div class="panel-row">
@@ -51,7 +68,7 @@
 
   <LogList />
 
-  <SyncSpinner visible={$syncing > 0 || !!$error} error={$error} />
+  <SyncSpinner visible={$syncing > 0} error={$error} />
 </div>
 
 <style>
@@ -66,6 +83,7 @@
 
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .header h1 { font-size: 20px; font-weight: 700; margin: 0; }
+  .header-actions { display: flex; align-items: center; gap: 8px; }
   .sub { font-size: 12px; color: #86868b; margin-top: 2px; }
 
   .panel-row {
@@ -79,6 +97,7 @@
   @media (max-width: 600px) {
     .wrap { padding: 12px 10px 80px; }
     .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .header-actions { width: 100%; }
     .header :global(.btn) { align-self: stretch; }
   }
 </style>

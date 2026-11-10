@@ -2,8 +2,8 @@ const GAS_ID = process.env.PUBLIC_PROD_GOOGLE_APPSCRIPT_ID;
 if (!GAS_ID) throw new Error("PUBLIC_PROD_GOOGLE_APPSCRIPT_ID not set in environment");
 const BASE = `https://script.google.com/macros/s/${GAS_ID}/exec`;
 
-async function api(type, method = "GET", body = null) {
-  const url = `${BASE}?type=${type}`;
+async function api(type, method = "GET", body = null, force = false) {
+  const url = `${BASE}?type=${type}${force ? "&force=1" : ""}`;
   const opts = { method, redirect: "follow" };
   if (body) {
     opts.headers = { "Content-Type": "text/plain;charset=utf-8" };
@@ -137,7 +137,39 @@ const log = (label, data) => console.log(`  ${label}:`, JSON.stringify(data).sub
   ok("limit_build=10", +save.template.limit_build === 10);
   ok("include_5=1", +save.template.include_5 === 1);
 
-  console.log("\n=== 8. Очистка ===");
+  console.log("\n=== 8. Ревизия и точечные операции ===");
+  const ver = await api("version");
+  ok("version rev", typeof ver.rev === "number");
+
+  const b3 = {
+    id: "b_c",
+    nick: "Charlie",
+    type: "Стройка",
+    buff: 15,
+    endAt: now + 3 * 86400,
+    createdAt: now,
+    applied: 0,
+    appliedCount: 0,
+    queueReceived: 0,
+    queueLastAt: 0,
+    priority: 1,
+  };
+  save = await api("save", "POST", { buff: b3, nick: "Charlie" });
+  ok(
+    "buff добавлен",
+    save.buffs.some((b) => b.id === "b_c"),
+  );
+  ok("priority сохранён", save.buffs.find((b) => b.id === "b_c").priority === 1);
+
+  const revBefore = save.rev;
+  save = await api("save", "POST", { deleteBuffId: "b_c" });
+  ok("buff удалён", !save.buffs.some((b) => b.id === "b_c"));
+  ok("rev вырос", save.rev > revBefore);
+
+  const forced = await api("state", "GET", null, true);
+  ok("force=1", forced.ok === true && Array.isArray(forced.buffs));
+
+  console.log("\n=== 9. Очистка ===");
   await api("save", "POST", { buffs: [] });
   data = await api("all");
   ok("чисто", data.buffs.length === 0);

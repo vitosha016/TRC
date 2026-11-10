@@ -1,18 +1,28 @@
 const GAS = `https://script.google.com/macros/s/${import.meta.env.PUBLIC_PROD_GOOGLE_APPSCRIPT_ID}/exec`;
+const TIMEOUT_MS = 20_000;
 
-export async function gasGet(type = "all") {
-  const r = await fetch(GAS + "?type=" + type, { redirect: "follow" });
-  return r.json();
+async function request(url, opts = {}) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  try {
+    const r = await fetch(url, { ...opts, redirect: "follow", signal: ctrl.signal });
+    return await r.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function gasGet(type = "all", force = false) {
+  const suffix = force ? "&force=1" : "";
+  return request(GAS + "?type=" + type + suffix);
 }
 
 export async function gasSave(data) {
-  const r = await fetch(GAS + "?type=save", {
+  return request(GAS + "?type=save", {
     method: "POST",
-    redirect: "follow",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(data),
   });
-  return r.json();
 }
 
 let syncing = 0;
@@ -36,12 +46,16 @@ async function track(p) {
   }
 }
 
-export function loadState() {
-  return track(gasGet("state"));
+export function loadState(force = false) {
+  return track(gasGet("state", force));
 }
 
-export function loadHistory() {
-  return track(gasGet("history"));
+export function loadHistory(force = false) {
+  return track(gasGet("history", force));
+}
+
+export function loadVersion() {
+  return gasGet("version");
 }
 
 export function loadAll() {

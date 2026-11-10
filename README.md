@@ -51,6 +51,8 @@ npm run dev
 3. Settings → Pages → Source: **GitHub Actions**
 4. Пуш в `master` → GitHub Actions соберёт и задеплоит
 
+**Порядок раскатки:** сначала обновить GAS (скопировать `.gs` и передеплоить), затем пушить фронт. Новый фронт блокирует запись, пока бэкенд не поддерживает `rev`.
+
 Workflow: `.github/workflows/deploy.yml`
 </details>
 
@@ -61,13 +63,15 @@ Workflow: `.github/workflows/deploy.yml`
 ├── src/
 │   ├── api/              # Бекенд на Google AppScript
 │   │   ├── README.md                    # Инструкция по развёртыванию бэка
-│   │   └── googleAppScriptBackend.gs   # Код для копирования в Apps Script
+│   │   ├── googleAppScriptBackend.gs    # Код для копирования в Apps Script
+│   │   └── googleAppScriptBackend.test.js  # Юнит-тесты бэкенда (vitest)
 │   ├── App.svelte         # Header, лейаут, копирование
 │   ├── utils/             # Чистые формулы + API + Svelte-сторы
 │   │   ├── formulas.js         # rankBuffsForQueue, applyBuffMath, calcNeeded…
-│   │   ├── formulas.test.js    # Юнит-тесты (vitest)
+│   │   ├── formulas.test.js    # Юнит-тесты формул (vitest)
 │   │   ├── api.js              # HTTP-клиент к GAS (gasGet/gasSave)
-│   │   └── stores.js           # Svelte-сторы: buffs, history, givers, ranked…
+│   │   ├── stores.js           # Svelte-сторы: buffs, history, givers, ranked…
+│   │   └── stores.test.js      # Юнит-тесты синхронизации (vitest)
 │   ├── components/        # Бизнес-компоненты
 │   │   ├── AddForm.svelte       # Форма добавления/редактирования
 │   │   ├── GiverPanel.svelte    # Поле «кто добавил» + топ донатеров
@@ -90,14 +94,19 @@ Workflow: `.github/workflows/deploy.yml`
 
 | Метод  | Параметр        | Назначение                                          | Кеш    |
 | ------ | --------------- | --------------------------------------------------- | ------ |
+| `GET`  | `?type=version` | Только `rev` и `epoch` — ревизия данных             | нет    |
 | `GET`  | `?type=state`   | buffs, givers, nicks, template (без истории)        | 1 час  |
 | `GET`  | `?type=history` | Только история транзакций                           | 30 мин |
 | `GET`  | `?type=all`     | Всё сразу (buffs, history, givers, nicks, template) | нет    |
-| `POST` | `?type=save`    | Сохранить изменения (инвалидирует оба кеша)         | —      |
+| `POST` | `?type=save`    | Изменения; обновляет кеш и ревизию                  | —      |
+
+`?force=1` для `state`/`history` — чтение мимо кеша.
 
 Бекенд — **pure data store**. Никакой логики, только CRUD в Google-таблицы. Вся математика на фронте.
 
-Кеширование — `CacheService` Apps Script. `state` загружается каждые 120с, `history` — только при открытии блока «История транзакций». Плюс `localStorage` для мгновенного первого рендера.
+Синхронизация: фронт опрашивает `version` каждые 20 секунд (только при видимой вкладке) и загружает `state` при смене `rev`/`epoch`. При возврате на вкладку — сразу. `save` обновляет кеш, а не удаляет его. Раз в 5 минут — принудительное чтение мимо кеша (ручные правки в таблице). В `localStorage` хранятся данные, `rev` и `epoch` для мгновенного рендера.
+
+Одновременное применение к одному игроку защищено `expectedAppliedCount`: при конфликте сервер возвращает свежие данные, клиент откатывает оптимистичное изменение и просит повторить.
 
 ## Команды
 

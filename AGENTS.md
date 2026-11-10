@@ -36,6 +36,8 @@ src/
 ├── main.js                  # точка входа, mount(App)
 ├── App.svelte               # лейаут, загрузка данных, копирование в чат
 ├── api/                     # бекенд GAS (код копируется вручную в Apps Script)
+│   ├── googleAppScriptBackend.gs
+│   └── googleAppScriptBackend.test.js
 ├── utils/
 │   ├── formulas.js          # rankBuffsForQueue, applyBuffMath, calcNeeded…
 │   ├── formulas.test.js
@@ -73,30 +75,38 @@ plan.md                      # исторический референс ори�
 
 ## API (GAS)
 
-| Метод | Параметр        | Назначение                     | Кеш    |
-| ----- | --------------- | ------------------------------ | ------ |
-| GET   | `?type=state`   | buffs, givers, nicks, template | 1 час  |
-| GET   | `?type=history` | только история                 | 30 мин |
-| GET   | `?type=all`     | всё сразу                      | нет    |
-| POST  | `?type=save`    | сохранение, инвалидирует кеши  | —      |
+| Метод | Параметр        | Назначение                      | Кеш    |
+| ----- | --------------- | ------------------------------- | ------ |
+| GET   | `?type=version` | только `rev` (ревизия данных)   | нет    |
+| GET   | `?type=state`   | buffs, givers, nicks, template  | 1 час  |
+| GET   | `?type=history` | только история                  | 30 мин |
+| GET   | `?type=all`     | всё сразу                       | нет    |
+| POST  | `?type=save`    | сохранение, обновляет кеш и rev | —      |
 
 Особенности:
 
 - POST отправляется с `Content-Type: text/plain;charset=utf-8` (требование GAS), тело — JSON.
-- `save` принимает любую комбинацию: `buffs` (полная замена листа), `historyEntry`, `giverStat`, `nick`, `nick2`, `template`.
-- Ответ `save` содержит свежие данные всех таблиц — сторы синхронизируются им.
-- Действия оптимистичны (сначала локально, потом `bgSave`); при ошибке — `bgFail()` с перезагрузкой.
-- Фронт опрашивает `state` каждые 120 с; история грузится лениво при открытии блока.
-- `localStorage` (`trc_cache`) используется только для мгновенного первого рендера.
+- `save` принимает комбинацию: `buff` (upsert одной записи по `id`), `expectedAppliedCount` (защита от одновременного apply), `deleteBuffId`, `historyEntry`, `giverStat`, `nick`, `nick2`, `template`. Legacy `buffs` (полная замена листа) поддерживается для скриптов.
+- Если `expectedAppliedCount` не совпал с текущим `appliedCount`, `save` возвращает `{ok:false, conflict:true}` со свежими данными и не меняет `rev`.
+- Ответ `save` содержит свежие данные всех таблиц, `rev` и `epoch`.
+- Действия оптимистичны (сначала локально, потом `bgSave`); при ошибке — `bgFail()` с перезагрузкой. При конфликте оптимистичное изменение откатывается.
+- Кеш: попадание отдаётся без лока; лок берётся только на cache-miss. `save` не удаляет кеш, а перезаписывает свежими `state`/`history`. Кеш валиден только при совпадении `rev` и `epoch`.
+- Синхронизация: опрос `version` каждые 20 с при видимой вкладке, полный `state` — только при смене `rev`/`epoch`; мгновенная проверка на `visibilitychange`/`focus`/`online`; раз в 5 минут — `force=1` мимо кеша.
+- `epoch` хранится в `ScriptProperties`; его смена означает сброс серверной ревизии и сбрасывает локальный `rev`.
+- Запись блокируется, если бэкенд не поддерживает `rev` (защита от деплоя фронта раньше GAS).
+- `localStorage` (`trc_cache`) хранит данные, `rev`, `epoch` и `checkedAt` для мгновенного первого рендера.
+- `?force=1` для `state`/`history` — принудительное чтение мимо кеша.
 
 ## Тесты
 
-- Vitest, тесты рядом с кодом: `src/utils/formulas.test.js`.
-- Покрывай изменения в `formulas.js` юнит-тестами. Компоненты и сторы тестами не покрыты — проверяй вручную через `npm run dev`.
+- Vitest, тесты рядом с кодом: `src/utils/formulas.test.js`, `src/utils/stores.test.js`, `src/api/googleAppScriptBackend.test.js`.
+- Покрывай изменения в `formulas.js`, логике синхронизации в `stores.js` и GAS-бэкенде юнит-тестами. Компоненты тестами не покрыты — проверяй вручную через `npm run dev`.
 
 ## Деплой
 
 Пуш в `master` → GitHub Actions (`.github/workflows/deploy.yml`) → GitHub Pages. Переменная `PUBLIC_PROD_GOOGLE_APPSCRIPT_ID` берётся из environment `production`. Секреты в репозиторий не коммитить.
+
+После изменений в `src/api/googleAppScriptBackend.gs` код нужно вручную перекопировать в Apps Script и передеплоить веб-приложение. **Порядок раскатки: сначала GAS, потом фронт.** Новый фронт блокирует запись, если бэкенд не поддерживает `rev`.
 
 ## Чего не делать
 

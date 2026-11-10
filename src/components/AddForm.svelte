@@ -37,7 +37,7 @@
   function submit(e) {
     e.preventDefault();
     if (days === 0 && hours === 0) { alert('Укажи дни или часы'); return; }
-    doAdd(nick, type, days, hours, editId, priority);
+    if (!doAdd(nick, type, days, hours, editId, priority)) return;
     nick = ''; days = 0; hours = 0; editId = ''; priority = false;
     requestAnimationFrame(() => {
       const inp = document.querySelector('#snick');

@@ -1,17 +1,16 @@
 <script>
   let { visible = false, error = '' } = $props();
-
-  let showError = $state(false);
-  let errorText = $state('');
-
-  $effect(() => {
-    if (error) { showError = true; errorText = error; setTimeout(() => showError = false, 5000); }
-  });
 </script>
 
-{#if visible}
-  <div class="sync-spinner" class:error={showError} role="status" aria-live="polite" aria-label={showError ? errorText : 'Идёт синхронизация с сервером'}>
-    {showError ? errorText : 'Синхронизация...'}
+{#if visible || error}
+  <div
+    class="sync-spinner"
+    class:error={!!error}
+    role="status"
+    aria-live="polite"
+    aria-label={error || 'Идёт синхронизация с сервером'}
+  >
+    {error || 'Синхронизация...'}
   </div>
 {/if}
 
