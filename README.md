@@ -62,15 +62,15 @@ Workflow: `.github/workflows/deploy.yml`
 │   ├── api/              # Бекенд на Google AppScript
 │   │   ├── README.md                    # Инструкция по развёртыванию бэка
 │   │   └── googleAppScriptBackend.gs   # Код для копирования в Apps Script
+│   ├── App.svelte         # Header, лейаут, копирование
 │   ├── utils/             # Чистые формулы + API + Svelte-сторы
-│   │   ├── formulas.js         # scoreBuff, getQueueFireIds, calcNeeded…
-│   │   ├── formulas.test.js    # 39 тестов (vitest)
+│   │   ├── formulas.js         # rankBuffsForQueue, applyBuffMath, calcNeeded…
+│   │   ├── formulas.test.js    # Юнит-тесты (vitest)
 │   │   ├── api.js              # HTTP-клиент к GAS (gasGet/gasSave)
 │   │   └── stores.js           # Svelte-сторы: buffs, history, givers, ranked…
 │   ├── components/        # Бизнес-компоненты
-│   │   ├── App.svelte           # Header, лейаут, копирование
 │   │   ├── AddForm.svelte       # Форма добавления/редактирования
-│   │   ├── GiverPanel.svelte    # Поле «кто накладывает» + топ донатеров
+│   │   ├── GiverPanel.svelte    # Поле «кто добавил» + топ донатеров
 │   │   ├── BuffTable.svelte     # Таблицы очереди (2 колонки)
 │   │   └── LogList.svelte       # История транзакций (details)
 │   └── components/ui/     # Stateless UI-компоненты
@@ -104,51 +104,26 @@ Workflow: `.github/workflows/deploy.yml`
 ```bash
 npm run dev       # Dev-сервер (Vite + Svelte, hot reload)
 npm run build     # Production-сборка → dist/
-npm test          # 39 тестов (vitest)
+npm test          # Юнит-тесты (vitest)
 npm run lint      # Линтер с автофиксом (oxlint --fix)
 npm run format    # Форматтер (oxfmt)
 ```
 
-## Механика сортировки
+## Механика
 
 <details>
-<summary>Механика сортировки и 🔥-правила</summary>
+<summary>Сортировка, экономия и применение баффа</summary>
 
-### scoreBuff — приоритет очереди
+### Сортировка очереди
 
-```
-left   = max(0, endAt - now)
-saving = round(left × applied / 100)               // накопленная экономия (отображение)
-score  = round(round(left × buff / 100) × boost)   // приоритет сортировки
-```
+1. **Приоритетные** (`📌`, `priority = 1`) — выше
+2. **Время добавления** (`createdAt` ASC) — кто раньше добавлен, тот выше
 
-- **boost** = 1.1 (Стройка) / 1.05 (Исследования)
-- **buff** — процент баффа игрока
-- **applied** — суммарный % уже выданных баффов
+«Стройка» и «Исследования» сортируются независимо. Приоритетные игроки идут первыми и в тексте копирования.
 
-### Буст донатерам
+### Экономия в таблице
 
-Топ-3 по количеству розданных баффов:
-
-- **№1** → `score × 1.5`
-- **№2-3** → `score × 1.25`
-
-Ники сравниваются без учёта регистра. При наведении на ник в таблице — tooltip с раскладкой score.
-
-### Сортировка
-
-1. 🔥 **queueFire** — горящие всегда наверху
-2. **score** по убыванию (с учётом донатерского буста)
-3. **left** по убыванию (при равном score)
-
-### 🔥 queueFire
-
-Игрок получает 🔥, если в его категории:
-
-- есть хотя бы один уже получивший бафф (`queueReceived = 1`)
-- **и** неполучивших ∈ {1, 2}
-
-> Загорается когда почти все получили, а 1-2 ещё нет — им срочно нужен бафф.
+Колонка «Экономия» = `round(left × applied / 100)`. Совокупный эффект от уже выданных баффов.
 
 ### applyBuff — применение баффа
 
@@ -157,15 +132,11 @@ score  = round(round(left × buff / 100) × boost)   // приоритет со�
 - `endAt = now + remaining × (1 − percent/100)`
 - `applied` += percent, `appliedCount` += 1
 - `queueReceived = 1`, `queueLastAt = now`
-- Запись в историю, обновление статистики донора
-
-### Экономия в таблице
-
-Колонка «Экономия» = `round(left × applied / 100)`. Совокупный эффект от уже выданных баффов.
+- Запись в историю, обновление статистики «Кто добавил»
 
 ### Донатеры
 
-Топ-8 по количеству розданных баффов (горизонтальный скролл). Кулдаун — **3 суток** (259 200 сек).
+Топ-8 по количеству розданных баффов (горизонтальный скролл). Кулдаун — **3 суток** (259 200 сек). На сортировку не влияет.
 
 ### Копирование в чат
 
@@ -195,4 +166,4 @@ Vi007 10% Стройка
 - **[Google AppScript](https://developers.google.com/apps-script)** — бекенд-как-сервис на Google Sheets
 - **[oxlint](https://oxc.rs/)** + **[oxfmt](https://oxc.rs/)** — линтинг и форматирование
 - **[lefthook](https://github.com/evilmartians/lefthook)** — git-хуки
-- **[vitest](https://vitest.dev/)** — тесты (39 штук)
+- **[vitest](https://vitest.dev/)** — юнит-тесты

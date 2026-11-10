@@ -1,6 +1,6 @@
 <script>
-  import { build, research, doApply, doDelete, nowSec } from '../utils/stores.js';
-  import { formatSeconds } from '../utils/formulas.js';
+  import { build, research, doApply, doDelete } from '../utils/stores.js';
+  import { formatSeconds, nowSec } from '../utils/formulas.js';
   import Button from './ui/Button.svelte';
   import Card from './ui/Card.svelte';
 
@@ -13,18 +13,6 @@
   });
 
   function left(endAt) { return Math.max(0, endAt - now); }
-
-  function scoreTitle(e) {
-    const l = left(e.endAt);
-    const buff = e.buff || 0;
-    const boost = e.type === 'Стройка' ? 1.1 : 1.05;
-    const base = Math.round(Math.round(l * buff / 100) * boost);
-    const total = e.score;
-    const fire = e.queueFire ? '🔥 ' : '';
-    return `${fire}${e.nick}\nscore = round(round(${l} × ${buff} / 100) × ${boost}) = ${base}` +
-      (total !== base ? `\nдонатер ×${(total / base).toFixed(2)} → ${total}` : '') +
-      `\nэкономия = round(${l} × ${e.applied || 0} / 100) = ${e.saving}`;
-  }
 </script>
 
 {#if $build.length === 0 && $research.length === 0}
@@ -40,9 +28,9 @@
         <tbody>
         {#each $build as e, i}
           {@const l = left(e.endAt)}
-          <tr class:fire={e.queueFire}>
-            <td class="rank">{e.queueFire ? '!' : i + 1}</td>
-          <td class="name" title={scoreTitle(e)}>{e.queueFire ? '🔥 ' : ''}{e.nick}</td>
+          <tr>
+            <td class="rank">{i + 1}</td>
+          <td class="name">{e.priority ? '📌 ' : ''}{e.nick}</td>
             <td class="time">{formatSeconds(l)}</td>
             <td class="saving">{formatSeconds(e.saving)}</td>
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
@@ -56,7 +44,7 @@
               </div>
             </td>
           </tr>
-          <tr class="mobile-act" class:fire={e.queueFire}>
+          <tr class="mobile-act">
             <td colspan="6">
               {#each [5, 10, 15] as p}
                 <Button variant={'small pct' + p} onclick={() => doApply(e.id, p, giverNick)} title={'Ускорить ' + e.nick + ' на ' + p + '%'}>{p}%</Button>
@@ -79,9 +67,9 @@
         <tbody>
         {#each $research as e, i}
           {@const l = left(e.endAt)}
-          <tr class:fire={e.queueFire}>
-            <td class="rank">{e.queueFire ? '!' : i + 1}</td>
-          <td class="name" title={scoreTitle(e)}>{e.queueFire ? '🔥 ' : ''}{e.nick}</td>
+          <tr>
+            <td class="rank">{i + 1}</td>
+          <td class="name">{e.priority ? '📌 ' : ''}{e.nick}</td>
             <td class="time">{formatSeconds(l)}</td>
             <td class="saving">{formatSeconds(e.saving)}</td>
             <td class="count">{e.applied}%<br>{e.appliedCount}/14</td>
@@ -95,7 +83,7 @@
               </div>
             </td>
           </tr>
-          <tr class="mobile-act" class:fire={e.queueFire}>
+          <tr class="mobile-act">
             <td colspan="6">
               {#each [5, 10, 15] as p}
                 <Button variant={'small pct' + p} onclick={() => doApply(e.id, p, giverNick)} title={'Ускорить ' + e.nick + ' на ' + p + '%'}>{p}%</Button>
@@ -129,15 +117,9 @@
   th { text-align: left; padding: 4px 8px; color: #86868b; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; border-bottom: 2px solid #e0e0e4; }
   td { padding: 4px 8px; border-bottom: 1px solid #e0e0e4; vertical-align: middle; }
   tr:hover td { background: rgba(0,0,0,.03); }
-  tr.fire:hover td { background: rgba(245,158,11,.16); }
   .th-act { text-align: right; }
 
-  tr.fire td { background: #fff4e6; }
-  tr.fire { background: #fff4e6; }
-  tr.fire td:first-child { border-left: 4px solid #e8590c; }
-
   .rank { width: 24px; text-align: center; font-weight: 700; color: #86868b; }
-  tr.fire .rank { color: #e8590c; }
   .name { font-weight: 600; }
   .time { white-space: nowrap; }
   .saving { text-align: right; white-space: nowrap; }

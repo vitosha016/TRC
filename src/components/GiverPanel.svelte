@@ -19,7 +19,7 @@
 
 <Card>
   <div class="giver-row">
-    <span class="label">Кто наложил баф</span>
+    <span class="label">Кто добавил</span>
     <Suggest bind:value={giverNick} items={$nickList} placeholder="Ник игрока" onsave={onsavegiver} />
   </div>
 

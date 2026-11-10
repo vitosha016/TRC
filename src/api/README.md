@@ -122,7 +122,7 @@ npm run build
 ## Как это работает с фронтендом
 
 1. Фронтенд при загрузке делает `GET ?type=all` — получает все данные
-2. Все вычисления (`scoreBuff`, `rankBuffsForQueue`, `getQueueFireIds`, `generateCopyText`) делаются **на фронте**
+2. Все вычисления (`rankBuffsForQueue`, `applyBuffMath`, `generateCopyText`) делаются **на фронте**
 3. При применении баффа:
    - Фронтенд сам считает новый `endAt`, `applied`, `appliedCount` и т.д.
    - Отправляет `POST ?type=save` с обновлённым `buffs`, новой `historyEntry` и `giverStat`

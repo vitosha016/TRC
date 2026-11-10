@@ -1,4 +1,4 @@
-// Чистые формулы без сайд-эффектов (порт из index.html)
+// Чистые формулы без сайд-эффектов
 // Используются на фронте; бекенд только хранит данные
 
 /**
@@ -16,81 +16,24 @@ export function makeId() {
 }
 
 /**
- * scoreBuff — оценка приоритета
- * @param {{ endAt: number, buff: number, type: string, nick: string }} entry
- * @param {number} currentTime — unix timestamp в секундах
- * @param {{ [nick: string]: { total: number } }} givers — статистика доноров (опционально)
- * @returns {{ left: number, saving: number, score: number }}
- */
-export function scoreBuff(entry, currentTime, givers) {
-  const left = Math.max(0, entry.endAt - currentTime);
-  const saving = Math.round((left * (entry.applied || 0)) / 100);
-  let score = Math.round(
-    Math.round((left * (entry.buff || 0)) / 100) * (entry.type === "Стройка" ? 1.1 : 1.05),
-  );
-
-  // Буст донатерам: топ-3 по количеству розданных баффов получают множитель
-  if (givers && entry.nick) {
-    const sorted = Object.entries(givers).sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
-    const rank = sorted.findIndex(([nick]) => nick.toLowerCase() === entry.nick.toLowerCase());
-    if (rank === 0) score = Math.round(score * 1.5);
-    else if (rank >= 1 && rank <= 2) score = Math.round(score * 1.25);
-  }
-
-  return { left, saving, score };
-}
-
-/**
- * getQueueFireIds — кому срочно нужен бафф
- * Правило: если в категории есть уже получившие (queueReceived=1)
- *   И количество неполучивших ∈ {1, 2}
- *   → пометить всех неполучивших как 🔥
- * @param {Array<{ id: string, type: string, queueReceived: number }>} items
- * @returns {Set<string>} id-шники «горящих»
- */
-export function getQueueFireIds(items) {
-  const fireIds = new Set();
-  const TYPES = ["Стройка", "Исследования"];
-
-  for (const type of TYPES) {
-    const category = items.filter((item) => item.type === type);
-    const pending = category.filter((item) => !item.queueReceived);
-    const alreadyReceived = category.length - pending.length;
-
-    if (alreadyReceived > 0 && pending.length > 0 && pending.length <= 2) {
-      for (const item of pending) {
-        fireIds.add(item.id);
-      }
-    }
-  }
-
-  return fireIds;
-}
-
-/**
- * rankBuffsForQueue — сортировка очереди
- * 1. 🔥 (queueFire DESC)
- * 2. score DESC
- * 3. left DESC
+ * rankBuffsForQueue — обогащение и сортировка очереди
+ * 1. Приоритетные (📌) — выше
+ * 2. По времени добавления (createdAt ASC)
  * @param {Array} items — сырой массив buff-объектов
  * @param {number} currentTime
  * @returns {Array} обогащённый и отсортированный массив
  */
-export function rankBuffsForQueue(items, currentTime, givers) {
-  const enriched = items.map((item) => {
-    const { left, saving, score } = scoreBuff(item, currentTime, givers);
-    return { ...item, left, saving, score };
-  });
-
-  const fireIds = getQueueFireIds(enriched);
-
-  return enriched
-    .map((item) => ({ ...item, queueFire: fireIds.has(item.id) }))
+export function rankBuffsForQueue(items, currentTime) {
+  return items
+    .map((item) => {
+      const left = Math.max(0, item.endAt - currentTime);
+      const saving = Math.round((left * (item.applied || 0)) / 100);
+      return { ...item, left, saving };
+    })
     .sort((a, b) => {
-      const fireDiff = (b.queueFire ? 1 : 0) - (a.queueFire ? 1 : 0);
-      if (fireDiff !== 0) return fireDiff;
-      if (b.score !== a.score) return b.score - a.score;
-      return b.left - a.left;
+      const priorityDiff = (b.priority ? 1 : 0) - (a.priority ? 1 : 0);
+      if (priorityDiff !== 0) return priorityDiff;
+      return (a.createdAt || 0) - (b.createdAt || 0);
     });
 }
 
@@ -160,8 +103,8 @@ export function formatTimeShort(sec) {
 /**
  * Генерация текста для копирования в чат
  */
-export function generateCopyText({ buffs, template, currentTime, givers }) {
-  const ranked = rankBuffsForQueue(buffs, currentTime, givers);
+export function generateCopyText({ buffs, template, currentTime }) {
+  const ranked = rankBuffsForQueue(buffs, currentTime);
   const dateStr = new Date(currentTime * 1000).toLocaleDateString("ru-RU");
 
   function fmt(sec) {
@@ -173,13 +116,7 @@ export function generateCopyText({ buffs, template, currentTime, givers }) {
   }
 
   function renderLines(items) {
-    return items
-      .map((item) => {
-        const left = Math.max(0, item.endAt - currentTime);
-        const marker = item.queueFire ? "#256" : "\u2022";
-        return marker + " " + item.nick + " \u2014 " + fmt(left) + "\n";
-      })
-      .join("");
+    return items.map((item) => "\u2022 " + item.nick + " \u2014 " + fmt(item.left) + "\n").join("");
   }
 
   let text = (template.header_build || "").replace("{date}", dateStr);
@@ -207,13 +144,12 @@ export function generateCopyText({ buffs, template, currentTime, givers }) {
       const minApplied = Math.min(...remaining.map((item) => item.appliedCount || 0));
       const candidates = remaining.filter((item) => (item.appliedCount || 0) === minApplied);
       const chosen = candidates[Math.floor(Math.random() * candidates.length)];
-      const left = Math.max(0, chosen.endAt - currentTime);
-      const needed = calcNeeded(left, 7 * 86400);
+      const needed = calcNeeded(chosen.left, 7 * 86400);
       text +=
         "1. " +
         chosen.nick +
         " - " +
-        fmt(left) +
+        fmt(chosen.left) +
         " - " +
         (chosen.appliedCount || 0) +
         "/" +

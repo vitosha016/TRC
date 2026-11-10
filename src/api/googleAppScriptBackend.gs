@@ -119,6 +119,7 @@ function getBuffs() {
     "appliedCount",
     "queueReceived",
     "queueLastAt",
+    "priority",
   ];
   var sheet = getOrCreateSheet("Buffs", headers);
   var data = sheet.getDataRange().getValues();
@@ -138,6 +139,7 @@ function getBuffs() {
       appliedCount: Number(row[7]) || 0,
       queueReceived: Number(row[8]) || 0,
       queueLastAt: Number(row[9]) || 0,
+      priority: Number(row[10]) || 0,
     });
   }
 
@@ -156,6 +158,7 @@ function setBuffs(buffsArray) {
     "appliedCount",
     "queueReceived",
     "queueLastAt",
+    "priority",
   ];
   var sheet = getOrCreateSheet("Buffs", headers);
   sheet.clearContents();
@@ -175,6 +178,7 @@ function setBuffs(buffsArray) {
       b.appliedCount,
       b.queueReceived,
       b.queueLastAt,
+      b.priority || 0,
     ];
   });
 
@@ -348,9 +352,25 @@ function getOrCreateSheet(name, titlesArr) {
 
   if (isSheetEmpty(sheet)) {
     sheet.appendRow(titlesArr);
+  } else {
+    ensureHeaders(sheet, titlesArr);
   }
 
   return sheet;
+}
+
+function ensureHeaders(sheet, titlesArr) {
+  var lastCol = sheet.getLastColumn();
+  if (lastCol === 0) return;
+
+  var current = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  var missing = titlesArr.filter(function (title) {
+    return current.indexOf(title) === -1;
+  });
+
+  if (missing.length > 0) {
+    sheet.getRange(1, lastCol + 1, 1, missing.length).setValues([missing]);
+  }
 }
 
 function isSheetEmpty(sheet) {

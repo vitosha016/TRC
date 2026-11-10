@@ -13,15 +13,17 @@
   let type = $state('Стройка');
   let days = $state(0);
   let hours = $state(0);
+  let priority = $state(false);
 
   $effect(() => {
-    if (!editId) { nick = ''; days = 0; hours = 0; return; }
+    if (!editId) { nick = ''; days = 0; hours = 0; priority = false; return; }
     let entry;
     const unsub = buffs.subscribe(v => { entry = v.find(b => b.id === editId); });
     unsub();
     if (!entry) return;
     nick = entry.nick;
     type = entry.type;
+    priority = !!entry.priority;
     days = Math.floor((entry.endAt - entry.createdAt) / 86400);
     hours = Math.floor(((entry.endAt - entry.createdAt) % 86400) / 3600);
     tick().then(() => {
@@ -35,8 +37,8 @@
   function submit(e) {
     e.preventDefault();
     if (days === 0 && hours === 0) { alert('Укажи дни или часы'); return; }
-    doAdd(nick, type, days, hours, editId);
-    nick = ''; days = 0; hours = 0; editId = '';
+    doAdd(nick, type, days, hours, editId, priority);
+    nick = ''; days = 0; hours = 0; editId = ''; priority = false;
     requestAnimationFrame(() => {
       const inp = document.querySelector('#snick');
       if (inp) inp.focus();
@@ -71,6 +73,11 @@
       <input type="hidden" bind:value={editId} />
     </div>
 
+    <label class="prio">
+      <input type="checkbox" bind:checked={priority} />
+      <span>📌 Принудительный приоритет</span>
+    </label>
+
     <div class="btn-row">
       <Button variant="main full" type="submit">
         {editId ? 'Обновить' : '+ Добавить'}
@@ -82,6 +89,11 @@
 <style>
   .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .btn-row { margin-top: 8px; }
+  .prio {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 8px; font-size: 12px; cursor: pointer; user-select: none;
+  }
+  .prio input { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: #4263eb; }
   .field-nick { flex: 1; min-width: 120px; }
   .field-type { width: 80px; flex-shrink: 0; }
   .field-num  { width: 80px; flex-shrink: 0; }

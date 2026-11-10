@@ -1,6 +1,6 @@
 import { writable, derived } from "svelte/store";
 import { loadState, loadHistory, bgSave, onSync } from "./api.js";
-import { scoreBuff, getQueueFireIds, makeId } from "./formulas.js";
+import { applyBuffMath, makeId, rankBuffsForQueue, nowSec } from "./formulas.js";
 
 export const buffs = writable([]);
 export const history = writable([]);
@@ -39,14 +39,12 @@ function isExpired(b) {
 }
 
 // Деривативы
-export const ranked = derived([buffs, givers], ([$buffs, $givers]) => {
+export const ranked = derived(buffs, ($buffs) => {
   const ns = nowSec();
-  const active = $buffs.filter((b) => b.endAt > ns);
-  const enr = active.map((b) => ({ ...b, ...scoreBuff(b, ns, $givers) }));
-  const fireIds = getQueueFireIds(enr);
-  return enr
-    .map((b) => ({ ...b, queueFire: fireIds.has(b.id) }))
-    .sort((a, b) => (b.queueFire | 0) - (a.queueFire | 0) || b.score - a.score || b.left - a.left);
+  return rankBuffsForQueue(
+    $buffs.filter((b) => b.endAt > ns),
+    ns,
+  );
 });
 
 export const build = derived(ranked, ($r) => $r.filter((i) => i.type === "Стройка"));
@@ -54,25 +52,16 @@ export const research = derived(ranked, ($r) => $r.filter((i) => i.type === "И�
 
 // Действия — fire-and-forget, UI не блокируют
 export function doApply(buffId, percent, giverNick) {
+  const now = nowSec();
+
   buffs.update((arr) => {
     const idx = arr.findIndex((b) => b.id === buffId);
     if (idx === -1) return arr;
-    const now = nowSec();
-    const rem = Math.max(0, arr[idx].endAt - now);
-    const updated = {
-      ...arr[idx],
-      endAt: Math.round(now + rem * (1 - percent / 100)),
-      applied: (arr[idx].applied || 0) + percent,
-      appliedCount: (arr[idx].appliedCount || 0) + 1,
-      queueReceived: 1,
-      queueLastAt: now,
-    };
     const next = [...arr];
-    next[idx] = updated;
+    next[idx] = applyBuffMath(arr[idx], percent, now);
     return next;
   });
 
-  const now = nowSec();
   const histEntry = {
     id: "bh" + now + Math.random().toString(36).slice(2),
     recipient_id: buffId,
@@ -140,21 +129,31 @@ export function doDelete(buffId) {
     .catch(bgFail);
 }
 
-export function doAdd(nick, type, days, hours, editId) {
+export function doAdd(nick, type, days, hours, editId, priority = false) {
   const now = nowSec();
   const endAt = now + (days * 1440 + hours * 60) * 60;
+  const prio = priority ? 1 : 0;
 
   if (editId) {
     buffs.update((arr) => {
       const idx = arr.findIndex((b) => b.id === editId);
       if (idx === -1) return arr;
-      const updated = { ...arr[idx], nick, type, endAt, queueReceived: 0, queueLastAt: 0 };
+      const updated = {
+        ...arr[idx],
+        nick,
+        type,
+        endAt,
+        priority: prio,
+        queueReceived: 0,
+        queueLastAt: 0,
+      };
       const next = [...arr];
       next[idx] = updated;
       return next;
     });
   } else {
     buffs.update((arr) => [
+      ...arr,
       {
         id: makeId(),
         nick,
@@ -166,8 +165,8 @@ export function doAdd(nick, type, days, hours, editId) {
         appliedCount: 0,
         queueReceived: 0,
         queueLastAt: 0,
+        priority: prio,
       },
-      ...arr,
     ]);
   }
 
@@ -239,8 +238,4 @@ export function addNick(nick) {
     nickList.update((v) => (v.includes(nick) ? v : [...v, nick]));
     bgSave({ nick }).catch(() => {});
   }
-}
-
-export function nowSec() {
-  return Math.floor(Date.now() / 1000);
 }

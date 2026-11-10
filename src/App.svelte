@@ -1,14 +1,13 @@
 <script>
   import { onMount } from 'svelte';
-  import { doLoad, nowSec, addNick, nickList, givers } from './utils/stores.js';
+  import { doLoad, addNick, buffs, template, syncing, error } from './utils/stores.js';
   import BuffTable from './components/BuffTable.svelte';
   import AddForm from './components/AddForm.svelte';
   import GiverPanel from './components/GiverPanel.svelte';
   import LogList from './components/LogList.svelte';
   import SyncSpinner from './components/ui/SyncSpinner.svelte';
   import Button from './components/ui/Button.svelte';
-  import { generateCopyText } from './utils/formulas.js';
-  import { buffs, history, template, syncing, error } from './utils/stores.js';
+  import { generateCopyText, nowSec } from './utils/formulas.js';
 
   let giverNick = $state('');
   let editId = $state('');
@@ -23,12 +22,10 @@
   function saveGiver() { const v = giverNick.trim(); localStorage.setItem('giver_nick', v); if (v) addNick(v); }
 
   async function copy() {
-    let b, h, t, gv;
+    let b, t;
     buffs.subscribe(v => b = v)();
-    history.subscribe(v => h = v)();
     template.subscribe(v => t = v)();
-    givers.subscribe(v => gv = v)();
-    const text = generateCopyText({ buffs: b, history: h, template: t, givers: gv, currentTime: nowSec() });
+    const text = generateCopyText({ buffs: b, template: t, currentTime: nowSec() });
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(text);
       alert('Скопировано!');
